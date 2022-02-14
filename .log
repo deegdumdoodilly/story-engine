@@ -1,0 +1,118 @@
+2022-02-14 03:25:59,802 Distributing events
+2022-02-14 03:25:59,980 # _do_auth(): user: admin
+2022-02-14 03:25:59,980 # _do_auth(): self._auth_plugin: 
+2022-02-14 03:25:59,980 new_auth_plugin: mysql_native_password
+2022-02-14 03:26:00,098 Success, connection made. Attempting to read list of characters and events.
+2022-02-14 03:26:00,157 Iterating through scene stack.
+2022-02-14 03:26:00,157   Collecting completed ballots for stack_scene #11
+2022-02-14 03:26:00,176   No one voted! Generating a random vote now.
+2022-02-14 03:26:00,197     Chosen outcome is #9
+2022-02-14 03:26:00,274     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:00,274   Updating scene stack #11 to reflect this new winner (#21).
+2022-02-14 03:26:00,295   Applying event effects
+2022-02-14 03:26:00,314   string = '2.status+Swallowed, 2.environment={1}'s Stomach'
+2022-02-14 03:26:00,314     Effect text: 2.status+Swallowed
+2022-02-14 03:26:00,314     Affecting character # 6
+2022-02-14 03:26:00,314       Adding status: "Swallowed"
+2022-02-14 03:26:00,333     Effect text:  2.environment={1}'s Stomach
+2022-02-14 03:26:00,333     Affecting character # 6
+2022-02-14 03:26:00,561       Updating environment: "Blueberry\'s Stomach"
+2022-02-14 03:26:00,631   Collecting completed ballots for stack_scene #12
+2022-02-14 03:26:00,718   No one voted! Generating a random vote now.
+2022-02-14 03:26:00,797     Chosen outcome is #2
+2022-02-14 03:26:01,024     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:01,024   Updating scene stack #12 to reflect this new winner (#22).
+2022-02-14 03:26:01,044   Applying event effects
+2022-02-14 03:26:01,088   string = '1.environment=Frog Stomach, 1.state+Swallowed'
+2022-02-14 03:26:01,088     Effect text: 1.environment=Frog Stomach
+2022-02-14 03:26:01,088     Affecting character #12
+2022-02-14 03:26:01,121       Updating environment: "Frog Stomach"
+2022-02-14 03:26:01,320     Effect text:  1.state+Swallowed
+2022-02-14 03:26:01,320     Affecting character #12
+2022-02-14 03:26:01,321       Warning, did not detect 'status' or 'environment' for effect change
+2022-02-14 03:26:01,321   Collecting completed ballots for stack_scene #13
+2022-02-14 03:26:01,348   No one voted! Generating a random vote now.
+2022-02-14 03:26:01,383     Chosen outcome is #2
+2022-02-14 03:26:01,537     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:01,537   Updating scene stack #13 to reflect this new winner (#23).
+2022-02-14 03:26:01,617   Applying event effects
+2022-02-14 03:26:01,641   string = '1.environment=Frog Stomach, 1.state+Swallowed'
+2022-02-14 03:26:01,641     Effect text: 1.environment=Frog Stomach
+2022-02-14 03:26:01,641     Affecting character #4
+2022-02-14 03:26:01,664       Updating environment: "Frog Stomach"
+2022-02-14 03:26:01,690     Effect text:  1.state+Swallowed
+2022-02-14 03:26:01,690     Affecting character #4
+2022-02-14 03:26:01,691       Warning, did not detect 'status' or 'environment' for effect change
+2022-02-14 03:26:01,691   Collecting completed ballots for stack_scene #14
+2022-02-14 03:26:01,710   No one voted! Generating a random vote now.
+2022-02-14 03:26:01,729     Chosen outcome is #1
+2022-02-14 03:26:01,828     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:01,828   Updating scene stack #14 to reflect this new winner (#24).
+2022-02-14 03:26:01,847   Applying event effects
+2022-02-14 03:26:01,868   string = ''
+2022-02-14 03:26:01,868   Collecting completed ballots for stack_scene #15
+2022-02-14 03:26:01,887   No one voted! Generating a random vote now.
+2022-02-14 03:26:01,907     Chosen outcome is #6
+2022-02-14 03:26:02,015     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:02,015   Updating scene stack #15 to reflect this new winner (#25).
+2022-02-14 03:26:02,038   Applying event effects
+2022-02-14 03:26:02,067   string = ''
+2022-02-14 03:26:02,067   Collecting completed ballots for stack_scene #16
+2022-02-14 03:26:02,097   No one voted! Generating a random vote now.
+2022-02-14 03:26:02,123     Chosen outcome is #7
+2022-02-14 03:26:02,241     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:02,242   Updating scene stack #16 to reflect this new winner (#26).
+2022-02-14 03:26:02,272   Applying event effects
+2022-02-14 03:26:02,293   string = ''
+2022-02-14 03:26:02,293   Collecting completed ballots for stack_scene #17
+2022-02-14 03:26:02,311   No one voted! Generating a random vote now.
+2022-02-14 03:26:02,332     Chosen outcome is #2
+2022-02-14 03:26:02,432     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:02,432   Updating scene stack #17 to reflect this new winner (#27).
+2022-02-14 03:26:02,451   Applying event effects
+2022-02-14 03:26:02,483   string = '1.environment=Frog Stomach, 1.state+Swallowed'
+2022-02-14 03:26:02,483     Effect text: 1.environment=Frog Stomach
+2022-02-14 03:26:02,483     Affecting character #11
+2022-02-14 03:26:02,508       Updating environment: "Frog Stomach"
+2022-02-14 03:26:02,537     Effect text:  1.state+Swallowed
+2022-02-14 03:26:02,538     Affecting character #11
+2022-02-14 03:26:02,538       Warning, did not detect 'status' or 'environment' for effect change
+2022-02-14 03:26:02,538   Collecting completed ballots for stack_scene #18
+2022-02-14 03:26:02,567   No one voted! Generating a random vote now.
+2022-02-14 03:26:02,586     Chosen outcome is #9
+2022-02-14 03:26:02,684     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:02,685   Updating scene stack #18 to reflect this new winner (#28).
+2022-02-14 03:26:02,704   Applying event effects
+2022-02-14 03:26:02,724   string = '2.status+Swallowed, 2.environment={1}'s Stomach'
+2022-02-14 03:26:02,724     Effect text: 2.status+Swallowed
+2022-02-14 03:26:02,724     Affecting character # 8
+2022-02-14 03:26:02,724       Adding status: "Swallowed"
+2022-02-14 03:26:02,744     Effect text:  2.environment={1}'s Stomach
+2022-02-14 03:26:02,744     Affecting character # 8
+2022-02-14 03:26:02,783       Updating environment: "Dmitry\'s Stomach"
+2022-02-14 03:26:02,802   Collecting completed ballots for stack_scene #19
+2022-02-14 03:26:02,822   No one voted! Generating a random vote now.
+2022-02-14 03:26:02,842     Chosen outcome is #2
+2022-02-14 03:26:02,931     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:02,931   Updating scene stack #19 to reflect this new winner (#29).
+2022-02-14 03:26:02,963   Applying event effects
+2022-02-14 03:26:02,979   string = '1.environment=Frog Stomach, 1.state+Swallowed'
+2022-02-14 03:26:02,979     Effect text: 1.environment=Frog Stomach
+2022-02-14 03:26:02,979     Affecting character #10
+2022-02-14 03:26:02,999       Updating environment: "Frog Stomach"
+2022-02-14 03:26:03,020     Effect text:  1.state+Swallowed
+2022-02-14 03:26:03,020     Affecting character #10
+2022-02-14 03:26:03,020       Warning, did not detect 'status' or 'environment' for effect change
+2022-02-14 03:26:03,020   Collecting completed ballots for stack_scene #20
+2022-02-14 03:26:03,039   No one voted! Generating a random vote now.
+2022-02-14 03:26:03,059     Chosen outcome is #2
+2022-02-14 03:26:03,147     Inserted artificial vote, which is automatically the winning vote
+2022-02-14 03:26:03,147   Updating scene stack #20 to reflect this new winner (#30).
+2022-02-14 03:26:03,167   Applying event effects
+2022-02-14 03:26:03,186   string = '1.environment=Frog Stomach, 1.state+Swallowed'
+2022-02-14 03:26:03,187     Effect text: 1.environment=Frog Stomach
+2022-02-14 03:26:03,187     Affecting character #1
+2022-02-14 03:26:03,206       Updating environment: "Frog Stomach"
+2022-02-14 03:26:03,226     Effect text:  1.state+Swallowed
+2022-02-14 03:26:03,226     Affecting character #1
+2022-02-14 03:26:03,226       Warning, did not detect 'status' or 'environment' for effect change
