@@ -35,6 +35,16 @@ public class Scene {
         this.numParticipants = numParticipants;
         this.description = description;
     }
+
+    public void CopyFrom(Scene otherScene){
+        this.id = otherScene.id;
+        this.sceneName = otherScene.sceneName;
+        this.numRequirements = otherScene.numRequirements;
+        this.numOutcomes = otherScene.numOutcomes;
+        this.occurrences = otherScene.occurrences;
+        this.numParticipants = otherScene.numParticipants;
+        this.description = otherScene.description;
+    }
     
 
     public Integer getId() {
@@ -112,13 +122,13 @@ public class Scene {
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", sceneName='" + getSceneName() + "'" +
-            ", numRequirements='" + getNumRequirements() + "'" +
-            ", numOutcomes='" + getNumOutcomes() + "'" +
-            ", occurrences='" + getOccurrences() + "'" +
-            ", numParticipants='" + getNumParticipants() + "'" +
-            ", description='" + getDescription() + "'" +
+            "id:" + getId() +
+            ", sceneName:'" + getSceneName() + "'" +
+            ", numRequirements:" + getNumRequirements() +
+            ", numOutcomes:" + getNumOutcomes() +
+            ", occurrences:" + getOccurrences()  +
+            ", numParticipants:" + getNumParticipants()  +
+            ", description:'" + getDescription() + "'" +
             "}";
     }
 

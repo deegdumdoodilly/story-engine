@@ -36,11 +36,25 @@ def reset_indent():
 
 
 #json is a dict object
-def post_request(endpoint, json):
+def post_request_json(endpoint, json):
     headers = {
         "Content-Type": "application/json"
     }
     return requests.post(api_url + endpoint, json=json, headers=headers)
+
+
+def post_request_params(endpoint, parameters):
+    headers = {
+        "Content-Type": "application/json"
+    }
+    return requests.post(api_url + endpoint, params=parameters, headers=headers)
+
+
+def post_request(endpoint):
+    headers = {
+        "Content-Type": "application/json"
+    }
+    return requests.post(api_url + endpoint, headers=headers)
 
 
 def sql_query(query):
@@ -86,13 +100,13 @@ def get_random_voter(voting_frequency_dict):
 # Requirement is a string here
 def meets_requirement(requirement, character, event_name, role):
     if requirement[:12] == "environment=":
-        if character[3] == requirement[12:]:
+        if character[2] == requirement[12:]:
             return True
         else:
             log(
                 "Rejected {}, role {} due to mismatched environment (required {}, actual {})".format(event_name, role,
                                                                                                        requirement[12:],
-                                                                                                       character[3]))
+                                                                                                       character[2]))
     elif requirement[:7] == "status=":
         if has_status(character[0], requirement[7:]):
             return True
@@ -239,8 +253,10 @@ def chooseWinningBallots():
     USELESS_TRACKER_DELETE = 1000
 
     stack_scenes = sql_query("SELECT id, scene_id, participants FROM hungergames.performance WHERE in_progress = true;")
-    sql_modify("UPDATE hungergames.vote SET in_progress = false;")
-    sql_modify("UPDATE hungergames.performance SET in_progress = false;")
+    # sql_modify("UPDATE hungergames.vote SET in_progress = false;")
+    post_request_params('/vote/in-progress', {"inProgress": False})
+    # sql_modify("UPDATE hungergames.performance SET in_progress = false;")
+    post_request_params('/performance/in-progress', {"inProgress": False})
 
     log("Iterating through scene stack.")
     indent_log()
@@ -258,14 +274,15 @@ def chooseWinningBallots():
 
             if chosen_outcome_type > 0:
                 log("Tallying a positive vote for user #".format(ballot[0]))
-                vote_type = "positive_votes"
+                vote_type = "positive-votes"
             elif chosen_outcome_type < 0:
                 log("Tallying a negative vote for user #".format(ballot[0]))
-                vote_type = "negative_votes"
+                vote_type = "negative-votes"
             else:
                 log("Tallying a neutral vote for user #".format(ballot[0]))
-                vote_type = "neutral_votes"
-            sql_modify("UPDATE hungergames.user SET {0} = {0} + 1 WHERE id = {1};".format(vote_type, ballot[0]))
+                vote_type = "neutral-votes"
+            # sql_modify("UPDATE hungergames.user SET {0} = {0} + 1 WHERE id = {1};".format(vote_type, ballot[0]))
+            post_request_params('user/' + str(ballot[0]) + '/modify-' + vote_type, {"modification": 1})
 
         unindent_log()
         if len(votes) == 0:
@@ -280,7 +297,7 @@ def chooseWinningBallots():
             #           "hungergames.vote (performance_id, voter_id, chosen_outcome_id, in_progress, has_chosen_outcome) "
             #           "values ({}, Null, {}, false, true);".format(stack_scene_id, chosen_outcome_id))
             new_vote = {"performanceId": stack_scene_id, "voterId": None, "chosenOutcomeId": chosen_outcome_id, "inProgress": False, "hasChosenOutcome": True}
-            response = post_request('/vote', new_vote)
+            response = post_request_json('/vote', new_vote)
 
             db.commit()
             new_vote_id = sql_query("SELECT id FROM hungergames.vote ORDER BY id DESC;")[0][0]
@@ -293,7 +310,8 @@ def chooseWinningBallots():
 
         # Update scene_stack
         log("Updating scene stack #{} to reflect this new winner (#{}).".format(stack_scene_id, winning_vote[2]))
-        sql_modify("UPDATE hungergames.performance SET winning_vote = {} WHERE id = {}".format(winning_vote[2], stack_scene_id))
+        # sql_modify("UPDATE hungergames.performance SET winning_vote = {} WHERE id = {}".format(winning_vote[2], stack_scene_id))
+        post_request_params('performance/' + str(stack_scene_id) + '/set-winning-vote', {"voteId": winning_vote[2]})
 
         log("Applying event effects")
         effect_string = sql_query("SELECT effect FROM hungergames.outcome WHERE id = {};".format(winning_vote[1]))[0][0]
@@ -318,7 +336,7 @@ def chooseWinningBallots():
                         log("Adding status: \"{}\"".format(new_status_text))
                         # sql_modify("INSERT INTO hungergames.status (character_id, status) values ({}, '{}');".format(character_id, new_status_text))
                         new_status = {"characterId": character_id, "status": new_status_text}
-                        post_request('/status', new_status)
+                        post_request_json('/status', new_status)
                     elif '-' in effect:
                         old_status = effect[effect.index('-')+1:]
                         log("Removing status: \"{}\".".format(old_status))
@@ -330,7 +348,8 @@ def chooseWinningBallots():
                     new_environment = effect[effect.index('=')+1:]
                     new_environment = format_text(new_environment, participants)
                     log("Updating environment: \"{}\"".format(new_environment))
-                    sql_modify("UPDATE hungergames.actor SET environment = '{}' WHERE id = {};".format(new_environment, character_id))
+                    # sql_modify("UPDATE hungergames.actor SET environment = '{}' WHERE id = {};".format(new_environment, character_id))
+                    post_request_params('/actor/' + str(character_id) + '/set-environment', {"environment": new_environment})
                 else:
                     log("Warning, did not detect 'status' or 'environment' for effect change")
                 unindent_log()
@@ -340,6 +359,7 @@ def chooseWinningBallots():
 
 
 def create_and_publish_scenes():
+
     # Import begins
     characters = sql_query("SELECT id, name, environment, last_ate FROM hungergames.actor")
     global character_dict
@@ -380,8 +400,9 @@ def create_and_publish_scenes():
 
     # Update frequencies on the database end
     for event_id in event_frequency.keys():
-        command = "UPDATE hungergames.scene SET occurrences={} WHERE id={};".format(event_frequency[event_id], event_id)
-        sql_modify(command)
+        #command = "UPDATE hungergames.scene SET occurrences={} WHERE id={};".format(event_frequency[event_id], event_id)
+        #sql_modify(command)
+        post_request_params('/scene/' + str(event_id) + '/set-occurrences', {"occurrences": event_frequency[event_id]})
 
     votes_cast = {}
     voter_table = sql_query("SELECT id, voting_chances FROM hungergames.user WHERE valid_voter = 1;")
@@ -402,8 +423,11 @@ def create_and_publish_scenes():
         #                " VALUES ({}, 1, \"{}\", NULL);".format(stack_item['event_id'], str(stack_item['participants'])[1:-1])
 
         #sql_modify(insert_phrase)
+
+
+
         new_performance = {"sceneId": stack_item['event_id'], "inProgress": True, "participants": str(stack_item['participants'])[1:-1], "winningVote": None, "flavor": ""}
-        response = post_request('/performance', new_performance)
+        response = post_request_json('/performance', new_performance)
 
         #stack_id = int(sql_query("SELECT id FROM hungergames.performance ORDER BY id DESC;")[0][0])
 
@@ -420,14 +444,18 @@ def create_and_publish_scenes():
         #stack_id += 1
 
     for key in votes_cast:
-        modify_phrase = "UPDATE hungergames.user SET voting_chances={1} WHERE id={0};".format(key, votes_cast[key])
-        sql_modify(modify_phrase)
+        # modify_phrase = "UPDATE hungergames.user SET voting_chances={1} WHERE id={0};".format(key, votes_cast[key])
+        # sql_modify(modify_phrase)
+        parameters = {"votingChances": votes_cast[key]}
+        post_request_params('/user/' + str(key) + '/set-voting-chances', parameters)
 
     db.commit()
     exit(0)
 
 
 if __name__ == '__main__':
+
+
     logging.basicConfig(filename='.log', filemode='w', level=logging.DEBUG, format='%(asctime)s %(message)s')
 
     random.seed(123)
@@ -449,14 +477,14 @@ if __name__ == '__main__':
     cursor = db.cursor()
     log("Success, connection made. Attempting to read list of characters and events.")
 
+
+
     if len(sys.argv) > 1:
         if sys.argv[1].lower() == 'clear':
-            sql_modify('UPDATE hungergames.scene SET occurrences=0;')
-            sql_modify('UPDATE hungergames.user SET '
-                       'voting_chances=0, positive_votes=0, neutral_votes=0, negative_votes=0;')
-            sql_modify('UPDATE hungergames.vote SET performance_id = Null')
-            sql_modify('DELETE FROM hungergames.performance;')
-            sql_modify('DELETE FROM hungergames.vote;')
+            post_request('/scene/reset')
+            post_request('/user/reset')
+
+            post_request('/performance/clear')
         elif sys.argv[1].lower() == 'resolve':
             chooseWinningBallots()
             db.commit()

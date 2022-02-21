@@ -11,7 +11,7 @@ insert into hungergames.actor (name, environment, id) values ("Shiraori", "Woods
 insert into hungergames.actor (name, environment, id) values ("Raine", "Woods", 7);
 insert into hungergames.actor (name, environment, id) values ("Coco", "Woods", 8);
 insert into hungergames.actor (name, environment, id) values ("Blueberry", "Woods", 9);
-insert into hungergames.actor (name, environment, id) values ("Moriah", "Woods", 10);
+insert into hungergames.actor (name, environment, id) values ("Moria", "Woods", 10);
 insert into hungergames.actor (name, environment, id) values ("Amalica", "Woods", 11);
 insert into hungergames.actor (name, environment, id) values ("Tidi", "Woods", 12);
 insert into hungergames.actor (name, environment, id) values ("Dmitry", "Woods", 13);

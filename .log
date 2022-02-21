@@ -1,111 +1,203 @@
-2022-02-21 16:39:43,222 Distributing events
-2022-02-21 16:39:43,382 # _do_auth(): user: admin
-2022-02-21 16:39:43,382 # _do_auth(): self._auth_plugin: 
-2022-02-21 16:39:43,383 new_auth_plugin: mysql_native_password
-2022-02-21 16:39:43,499 Success, connection made. Attempting to read list of characters and events.
-2022-02-21 16:39:43,641 Selecting Andra's event
-2022-02-21 16:39:43,658   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
-2022-02-21 16:39:43,658   Rejecting event Giant Frog because role is not are available
-2022-02-21 16:39:43,676   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:43,676   Rejecting event Frog Guts because role is not are available
-2022-02-21 16:39:43,698   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:43,698   Rejecting event Frog Stew because role is not are available
-2022-02-21 16:39:43,736   Adding event Ambush, role 1
-2022-02-21 16:39:43,788   Adding event Ambush, role 2
-2022-02-21 16:39:43,789   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
-2022-02-21 16:39:43,789   Randomly selecting event: Ambush (role 1). Pushing to stack at index 0
-2022-02-21 16:39:43,789 Selecting Kamilah's event
-2022-02-21 16:39:43,789   Looking at existing multiplayer events
-2022-02-21 16:39:43,850   Joining event Ambush on stack, index 0 in role 2
-2022-02-21 16:39:43,850 Selecting Maddi's event
-2022-02-21 16:39:43,850   Looking at existing multiplayer events
-2022-02-21 16:39:43,892   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
-2022-02-21 16:39:43,892   Rejecting event Giant Frog because role is not are available
-2022-02-21 16:39:43,921   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:43,921   Rejecting event Frog Guts because role is not are available
-2022-02-21 16:39:43,944   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:43,944   Rejecting event Frog Stew because role is not are available
-2022-02-21 16:39:43,983   Rejecting Ambush (role 1) since the character is digesting and role does not specifically allow it.
-2022-02-21 16:39:43,983   Rejecting event Ambush because role is not are available
-2022-02-21 16:39:44,022   Rejecting Ambush (role 2) since the character is digesting and role does not specifically allow it.
-2022-02-21 16:39:44,022   Rejecting event Ambush because role is not are available
-2022-02-21 16:39:44,022 Warning, could not find a candidate event for Maddi
-2022-02-21 16:39:44,023 Selecting Raine's event
-2022-02-21 16:39:44,023   Looking at existing multiplayer events
-2022-02-21 16:39:44,042   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
-2022-02-21 16:39:44,042   Rejecting event Giant Frog because role is not are available
-2022-02-21 16:39:44,062   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,062   Rejecting event Frog Guts because role is not are available
-2022-02-21 16:39:44,082   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,082   Rejecting event Frog Stew because role is not are available
-2022-02-21 16:39:44,120   Adding event Ambush, role 1
-2022-02-21 16:39:44,159   Adding event Ambush, role 2
-2022-02-21 16:39:44,159   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
-2022-02-21 16:39:44,159   Randomly selecting event: Ambush (role 2). Pushing to stack at index 1
-2022-02-21 16:39:44,159 Selecting Tidi's event
-2022-02-21 16:39:44,159   Looking at existing multiplayer events
-2022-02-21 16:39:44,198   Joining event Ambush on stack, index 1 in role 1
-2022-02-21 16:39:44,198 Selecting Amalica's event
-2022-02-21 16:39:44,198   Looking at existing multiplayer events
-2022-02-21 16:39:44,219   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
-2022-02-21 16:39:44,219   Rejecting event Giant Frog because role is not are available
-2022-02-21 16:39:44,241   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,241   Rejecting event Frog Guts because role is not are available
-2022-02-21 16:39:44,258   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,258   Rejecting event Frog Stew because role is not are available
-2022-02-21 16:39:44,298   Adding event Ambush, role 1
-2022-02-21 16:39:44,337   Adding event Ambush, role 2
-2022-02-21 16:39:44,337   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
-2022-02-21 16:39:44,338   Randomly selecting event: Ambush (role 2). Pushing to stack at index 2
-2022-02-21 16:39:44,338 Selecting Moriah's event
-2022-02-21 16:39:44,338   Looking at existing multiplayer events
-2022-02-21 16:39:44,375   Joining event Ambush on stack, index 2 in role 1
-2022-02-21 16:39:44,376 Selecting Dmitry's event
-2022-02-21 16:39:44,376   Looking at existing multiplayer events
-2022-02-21 16:39:44,396   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
-2022-02-21 16:39:44,396   Rejecting event Giant Frog because role is not are available
-2022-02-21 16:39:44,416   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,416   Rejecting event Frog Guts because role is not are available
-2022-02-21 16:39:44,434   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,434   Rejecting event Frog Stew because role is not are available
-2022-02-21 16:39:44,485   Adding event Ambush, role 1
-2022-02-21 16:39:44,523   Adding event Ambush, role 2
-2022-02-21 16:39:44,523   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
-2022-02-21 16:39:44,524   Randomly selecting event: Ambush (role 1). Pushing to stack at index 3
-2022-02-21 16:39:44,524 Selecting Tyra's event
-2022-02-21 16:39:44,524   Looking at existing multiplayer events
-2022-02-21 16:39:44,565   Joining event Ambush on stack, index 3 in role 2
-2022-02-21 16:39:44,565 Selecting Marci's event
-2022-02-21 16:39:44,565   Looking at existing multiplayer events
-2022-02-21 16:39:44,581   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
-2022-02-21 16:39:44,581   Rejecting event Giant Frog because role is not are available
-2022-02-21 16:39:44,613   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,613   Rejecting event Frog Guts because role is not are available
-2022-02-21 16:39:44,632   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,632   Rejecting event Frog Stew because role is not are available
-2022-02-21 16:39:44,671   Adding event Ambush, role 1
-2022-02-21 16:39:44,708   Adding event Ambush, role 2
-2022-02-21 16:39:44,708   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
-2022-02-21 16:39:44,708   Randomly selecting event: Ambush (role 1). Pushing to stack at index 4
-2022-02-21 16:39:44,708 Selecting Coco's event
-2022-02-21 16:39:44,709   Looking at existing multiplayer events
-2022-02-21 16:39:44,747   Joining event Ambush on stack, index 4 in role 2
-2022-02-21 16:39:44,747 Selecting Shiraori's event
-2022-02-21 16:39:44,747   Looking at existing multiplayer events
-2022-02-21 16:39:44,768   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
-2022-02-21 16:39:44,768   Rejecting event Giant Frog because role is not are available
-2022-02-21 16:39:44,786   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,786   Rejecting event Frog Guts because role is not are available
-2022-02-21 16:39:44,817   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
-2022-02-21 16:39:44,818   Rejecting event Frog Stew because role is not are available
-2022-02-21 16:39:44,856   Adding event Ambush, role 1
-2022-02-21 16:39:44,905   Adding event Ambush, role 2
-2022-02-21 16:39:44,905   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
-2022-02-21 16:39:44,906   Randomly selecting event: Ambush (role 1). Pushing to stack at index 5
-2022-02-21 16:39:44,906 Selecting Blueberry's event
-2022-02-21 16:39:44,906   Looking at existing multiplayer events
-2022-02-21 16:39:44,943   Joining event Ambush on stack, index 5 in role 2
-2022-02-21 16:39:49,863 Adding item to stack: {'event_id': 4, 'participants': [1, 5]}
-2022-02-21 16:39:50,775 Inserting scene_stack with values (4, 1, "1, 5");
-2022-02-21 16:40:32,829 Starting new HTTP connection (1): localhost:8080
-2022-02-21 16:41:24,108 http://localhost:8080 "POST /api/performance HTTP/1.1" 500 None
+2022-02-21 19:29:56,708 Distributing events
+2022-02-21 19:29:56,841 # _do_auth(): user: admin
+2022-02-21 19:29:56,841 # _do_auth(): self._auth_plugin: 
+2022-02-21 19:29:56,841 new_auth_plugin: mysql_native_password
+2022-02-21 19:29:56,907 Success, connection made. Attempting to read list of characters and events.
+2022-02-21 19:29:56,910 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:29:56,997 http://localhost:8080 "POST /api/scene/reset HTTP/1.1" 200 23
+2022-02-21 19:29:57,000 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:29:57,065 http://localhost:8080 "POST /api/user/reset HTTP/1.1" 200 23
+2022-02-21 19:29:57,066 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:29:57,114 http://localhost:8080 "POST /api/performance/clear HTTP/1.1" 200 21
+2022-02-21 19:29:57,138 Selecting Andra's event
+2022-02-21 19:29:57,183   Adding event Giant Frog, role 1
+2022-02-21 19:29:57,202   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,202   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:57,215   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,215   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:57,241   Adding event Ambush, role 1
+2022-02-21 19:29:57,271   Adding event Ambush, role 2
+2022-02-21 19:29:57,271   Candidates finalized, options are: ['Giant Frog, role 1', 'Ambush, role 1', 'Ambush, role 2']
+2022-02-21 19:29:57,271   Randomly selecting event: Giant Frog (role 1). Pushing to stack at index 0
+2022-02-21 19:29:57,271 Selecting Kamilah's event
+2022-02-21 19:29:57,271   Looking at existing multiplayer events
+2022-02-21 19:29:57,293   Adding event Giant Frog, role 1
+2022-02-21 19:29:57,311   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,311   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:57,320   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,320   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:57,350   Adding event Ambush, role 1
+2022-02-21 19:29:57,369   Adding event Ambush, role 2
+2022-02-21 19:29:57,369   Removing Giant Frog due to overuse
+2022-02-21 19:29:57,369   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 19:29:57,370   Randomly selecting event: Ambush (role 2). Pushing to stack at index 1
+2022-02-21 19:29:57,370 Selecting Maddi's event
+2022-02-21 19:29:57,370   Looking at existing multiplayer events
+2022-02-21 19:29:57,389   Rejecting Ambush (role 1) since the character is digesting and role does not specifically allow it.
+2022-02-21 19:29:57,399   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual FrogStomach)
+2022-02-21 19:29:57,399   Rejecting event Giant Frog because role is not are available
+2022-02-21 19:29:57,419   Rejecting Frog Guts (role 1) since the character is digesting and role does not specifically allow it.
+2022-02-21 19:29:57,419   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:57,472   Adding event Frog Stew, role 1
+2022-02-21 19:29:57,507   Rejecting Ambush (role 1) since the character is digesting and role does not specifically allow it.
+2022-02-21 19:29:57,507   Rejecting event Ambush because role is not are available
+2022-02-21 19:29:57,537   Rejecting Ambush (role 2) since the character is digesting and role does not specifically allow it.
+2022-02-21 19:29:57,537   Rejecting event Ambush because role is not are available
+2022-02-21 19:29:57,537   Candidates finalized, options are: ['Frog Stew, role 1']
+2022-02-21 19:29:57,537   Randomly selecting event: Frog Stew (role 1). Pushing to stack at index 2
+2022-02-21 19:29:57,537 Selecting Raine's event
+2022-02-21 19:29:57,537   Looking at existing multiplayer events
+2022-02-21 19:29:57,566   Joining event Ambush on stack, index 1 in role 1
+2022-02-21 19:29:57,567 Selecting Tidi's event
+2022-02-21 19:29:57,567   Looking at existing multiplayer events
+2022-02-21 19:29:57,596   Adding event Giant Frog, role 1
+2022-02-21 19:29:57,606   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,606   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:57,616   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,616   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:57,655   Adding event Ambush, role 1
+2022-02-21 19:29:57,675   Adding event Ambush, role 2
+2022-02-21 19:29:57,675   Removing Ambush due to overuse
+2022-02-21 19:29:57,675   Removing Ambush due to overuse
+2022-02-21 19:29:57,675   Candidates finalized, options are: ['Giant Frog, role 1']
+2022-02-21 19:29:57,675   Randomly selecting event: Giant Frog (role 1). Pushing to stack at index 3
+2022-02-21 19:29:57,675 Selecting Amalica's event
+2022-02-21 19:29:57,675   Looking at existing multiplayer events
+2022-02-21 19:29:57,694   Adding event Giant Frog, role 1
+2022-02-21 19:29:57,704   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,704   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:57,714   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,714   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:57,765   Adding event Ambush, role 1
+2022-02-21 19:29:57,793   Adding event Ambush, role 2
+2022-02-21 19:29:57,793   Candidates finalized, options are: ['Giant Frog, role 1', 'Ambush, role 1', 'Ambush, role 2']
+2022-02-21 19:29:57,793   Randomly selecting event: Giant Frog (role 1). Pushing to stack at index 4
+2022-02-21 19:29:57,793 Selecting Moriah's event
+2022-02-21 19:29:57,793   Looking at existing multiplayer events
+2022-02-21 19:29:57,813   Adding event Giant Frog, role 1
+2022-02-21 19:29:57,828   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,828   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:57,842   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,842   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:57,861   Adding event Ambush, role 1
+2022-02-21 19:29:57,881   Adding event Ambush, role 2
+2022-02-21 19:29:57,881   Removing Giant Frog due to overuse
+2022-02-21 19:29:57,881   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 19:29:57,881   Randomly selecting event: Ambush (role 1). Pushing to stack at index 5
+2022-02-21 19:29:57,881 Selecting Dmitry's event
+2022-02-21 19:29:57,881   Looking at existing multiplayer events
+2022-02-21 19:29:57,900   Joining event Ambush on stack, index 5 in role 2
+2022-02-21 19:29:57,901 Selecting Tyra's event
+2022-02-21 19:29:57,901   Looking at existing multiplayer events
+2022-02-21 19:29:57,920   Adding event Giant Frog, role 1
+2022-02-21 19:29:57,931   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,931   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:57,940   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:57,940   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:57,970   Adding event Ambush, role 1
+2022-02-21 19:29:57,990   Adding event Ambush, role 2
+2022-02-21 19:29:57,990   Removing Ambush due to overuse
+2022-02-21 19:29:57,990   Removing Ambush due to overuse
+2022-02-21 19:29:57,990   Candidates finalized, options are: ['Giant Frog, role 1']
+2022-02-21 19:29:57,990   Randomly selecting event: Giant Frog (role 1). Pushing to stack at index 6
+2022-02-21 19:29:57,991 Selecting Marci's event
+2022-02-21 19:29:57,991   Looking at existing multiplayer events
+2022-02-21 19:29:58,019   Adding event Giant Frog, role 1
+2022-02-21 19:29:58,030   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:58,030   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:58,039   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:58,039   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:58,060   Adding event Ambush, role 1
+2022-02-21 19:29:58,088   Adding event Ambush, role 2
+2022-02-21 19:29:58,088   Candidates finalized, options are: ['Giant Frog, role 1', 'Ambush, role 1', 'Ambush, role 2']
+2022-02-21 19:29:58,088   Randomly selecting event: Giant Frog (role 1). Pushing to stack at index 7
+2022-02-21 19:29:58,088 Selecting Coco's event
+2022-02-21 19:29:58,088   Looking at existing multiplayer events
+2022-02-21 19:29:58,118   Adding event Giant Frog, role 1
+2022-02-21 19:29:58,128   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:58,128   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:58,138   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:58,138   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:58,163   Adding event Ambush, role 1
+2022-02-21 19:29:58,186   Adding event Ambush, role 2
+2022-02-21 19:29:58,187   Removing Giant Frog due to overuse
+2022-02-21 19:29:58,187   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 19:29:58,187   Randomly selecting event: Ambush (role 2). Pushing to stack at index 8
+2022-02-21 19:29:58,187 Selecting Shiraori's event
+2022-02-21 19:29:58,187   Looking at existing multiplayer events
+2022-02-21 19:29:58,206   Joining event Ambush on stack, index 8 in role 1
+2022-02-21 19:29:58,206 Selecting Blueberry's event
+2022-02-21 19:29:58,206   Looking at existing multiplayer events
+2022-02-21 19:29:58,226   Adding event Giant Frog, role 1
+2022-02-21 19:29:58,236   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:58,236   Rejecting event Frog Guts because role is not are available
+2022-02-21 19:29:58,255   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual Woods)
+2022-02-21 19:29:58,255   Rejecting event Frog Stew because role is not are available
+2022-02-21 19:29:58,275   Adding event Ambush, role 1
+2022-02-21 19:29:58,308   Adding event Ambush, role 2
+2022-02-21 19:29:58,308   Removing Ambush due to overuse
+2022-02-21 19:29:58,308   Removing Ambush due to overuse
+2022-02-21 19:29:58,308   Candidates finalized, options are: ['Giant Frog, role 1']
+2022-02-21 19:29:58,308   Randomly selecting event: Giant Frog (role 1). Pushing to stack at index 9
+2022-02-21 19:29:58,309 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:29:58,701 http://localhost:8080 "POST /api/scene/1/set-occurrences?occurrences=6 HTTP/1.1" 200 None
+2022-02-21 19:29:58,703 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:29:58,853 http://localhost:8080 "POST /api/scene/2/set-occurrences?occurrences=0 HTTP/1.1" 200 None
+2022-02-21 19:29:58,855 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:29:58,994 http://localhost:8080 "POST /api/scene/3/set-occurrences?occurrences=1 HTTP/1.1" 200 None
+2022-02-21 19:29:58,996 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:29:59,917 http://localhost:8080 "POST /api/scene/4/set-occurrences?occurrences=6 HTTP/1.1" 200 None
+2022-02-21 19:29:59,933 Adding item to stack: {'event_id': 1, 'participants': [1]}
+2022-02-21 19:29:59,933 Inserting scene_stack with values (1, 1, "1");
+2022-02-21 19:29:59,934 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:00,600 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:00,601 Adding item to stack: {'event_id': 4, 'participants': [7, 5]}
+2022-02-21 19:30:00,601 Inserting scene_stack with values (4, 1, "7, 5");
+2022-02-21 19:30:00,602 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:01,871 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:01,872 Adding item to stack: {'event_id': 3, 'participants': [2]}
+2022-02-21 19:30:01,872 Inserting scene_stack with values (3, 1, "2");
+2022-02-21 19:30:01,873 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,009 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,009 Adding item to stack: {'event_id': 1, 'participants': [12]}
+2022-02-21 19:30:02,009 Inserting scene_stack with values (1, 1, "12");
+2022-02-21 19:30:02,010 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,136 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,136 Adding item to stack: {'event_id': 1, 'participants': [11]}
+2022-02-21 19:30:02,136 Inserting scene_stack with values (1, 1, "11");
+2022-02-21 19:30:02,137 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,254 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,255 Adding item to stack: {'event_id': 4, 'participants': [10, 13]}
+2022-02-21 19:30:02,255 Inserting scene_stack with values (4, 1, "10, 13");
+2022-02-21 19:30:02,256 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,372 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,373 Adding item to stack: {'event_id': 1, 'participants': [4]}
+2022-02-21 19:30:02,373 Inserting scene_stack with values (1, 1, "4");
+2022-02-21 19:30:02,374 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,500 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,500 Adding item to stack: {'event_id': 1, 'participants': [3]}
+2022-02-21 19:30:02,500 Inserting scene_stack with values (1, 1, "3");
+2022-02-21 19:30:02,501 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,618 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,618 Adding item to stack: {'event_id': 4, 'participants': [6, 8]}
+2022-02-21 19:30:02,618 Inserting scene_stack with values (4, 1, "6, 8");
+2022-02-21 19:30:02,619 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,766 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,767 Adding item to stack: {'event_id': 1, 'participants': [9]}
+2022-02-21 19:30:02,767 Inserting scene_stack with values (1, 1, "9");
+2022-02-21 19:30:02,768 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,884 http://localhost:8080 "POST /api/performance HTTP/1.1" 200 None
+2022-02-21 19:30:02,885 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,950 http://localhost:8080 "POST /api/user/1/set-voting-chances HTTP/1.1" 400 None
+2022-02-21 19:30:02,951 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,959 http://localhost:8080 "POST /api/user/2/set-voting-chances HTTP/1.1" 400 None
+2022-02-21 19:30:02,960 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,966 http://localhost:8080 "POST /api/user/3/set-voting-chances HTTP/1.1" 400 None
+2022-02-21 19:30:02,967 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,975 http://localhost:8080 "POST /api/user/4/set-voting-chances HTTP/1.1" 400 None
+2022-02-21 19:30:02,976 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,983 http://localhost:8080 "POST /api/user/5/set-voting-chances HTTP/1.1" 400 None
+2022-02-21 19:30:02,985 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:02,993 http://localhost:8080 "POST /api/user/6/set-voting-chances HTTP/1.1" 400 None
+2022-02-21 19:30:02,994 Starting new HTTP connection (1): localhost:8080
+2022-02-21 19:30:03,000 http://localhost:8080 "POST /api/user/7/set-voting-chances HTTP/1.1" 400 None

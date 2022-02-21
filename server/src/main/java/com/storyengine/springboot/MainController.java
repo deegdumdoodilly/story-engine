@@ -53,9 +53,43 @@ public class MainController {
     return voteRepository.save(newVote);
   }
 
+  @PostMapping(path="/vote/clear") 
+  public @ResponseBody String ClearVotes () {
+    voteRepository.deleteAll();
+    return "Votes cleared.";
+  }
+
+  @PostMapping(path="/vote/in-progress") 
+  public @ResponseBody Vote SetVoteInProgress (@RequestParam(required = false) Integer id, @RequestParam Boolean inProgress) {
+    if(id == null){
+      for(Vote vote : voteRepository.findAll()){
+        vote.setInProgress(inProgress);
+      }
+      return null;
+    }else{
+      if(voteRepository.existsById(id)){
+        voteRepository.findById(id).get().setInProgress(inProgress);
+        return voteRepository.findById(id).get();
+      }else{
+        return null;
+      }
+    }
+  }
+
   @PostMapping(path="/actor") 
   public @ResponseBody Actor AddNewActor (@RequestBody Actor newActor) {
     return actorRepository.save(newActor);
+  }
+
+  @PostMapping(path="/actor/{id}/set-environment") 
+  public @ResponseBody Actor SetEnvironment (@PathVariable("id") Integer id, @RequestParam String environment) {
+    if(actorRepository.existsById(id)){
+      Actor actor = actorRepository.findById(id).get();
+      actor.setEnvironment(environment);
+      return actor;
+    }else{
+      return null;
+    }
   }
 
   @PostMapping(path="/status") 
@@ -65,7 +99,155 @@ public class MainController {
 
   @PostMapping(path="/performance") 
   public @ResponseBody Performance AddNewPerformance (@RequestBody Performance newPerformance) {
+    System.out.println(newPerformance.toString());
     return performanceRepository.save(newPerformance);
+  }
+
+  @PostMapping(path="/performance/clear") 
+  public @ResponseBody String ClearPerformances () {
+    performanceRepository.deleteAll();
+    return "Performances cleared.";
+  }
+
+  @PostMapping(path="/performance/{id}/set-winning-vote") 
+  public @ResponseBody Performance SetWinningVote (@PathVariable("id") Integer id, @RequestParam Integer voteId) {
+    if(performanceRepository.existsById(id)){
+      Performance performance = performanceRepository.findById(id).get();
+      performance.setWinningVote(voteId);
+      return performance;
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/performance/in-progress") 
+  public @ResponseBody Performance SetPerformanceInProgress (@RequestParam(required = false) Integer id, @RequestParam Boolean inProgress) {
+    if(id == null){
+      for(Performance performance : performanceRepository.findAll()){
+        performance.setInProgress(inProgress);
+      }
+      return null;
+    }else{
+      if(performanceRepository.existsById(id)){
+        performanceRepository.findById(id).get().setInProgress(inProgress);
+        return performanceRepository.findById(id).get();
+      }else{
+        return null;
+      }
+    }
+  }
+
+  @PostMapping(path="/scene/reset") 
+  public @ResponseBody String ResetSceneOccurrences () {
+    for(Scene s : sceneRepository.findAll()){
+      s.setOccurrences(0);
+    }
+    return "Occurrence count reset.";
+  }
+
+  @PostMapping(path="/scene") 
+  public @ResponseBody Scene AddNewScene (@RequestBody Scene newScene) {
+    if(sceneRepository.existsById(newScene.getId())){
+      sceneRepository.findById(newScene.getId()).get().CopyFrom(newScene);
+      return newScene;
+    }else{
+      return sceneRepository.save(newScene);
+    }
+  }
+
+  @PostMapping(path="/scene/{id}/set-occurrences") 
+  public @ResponseBody Scene AddNewScene (@PathVariable("id") Integer id, @RequestParam Integer occurrences) {
+    if(sceneRepository.existsById(id)){
+      Scene scene = sceneRepository.findById(id).get();
+      scene.setOccurrences(occurrences);
+      return scene;
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/{id}/set-voting-chances") 
+  public @ResponseBody User SetVotingChances (@PathVariable("id") Integer id, @RequestParam Integer votingChances) {
+    if(userRepository.existsById(id)){
+      userRepository.findById(id).get().setVotingChances(votingChances);
+      return userRepository.findById(id).get();
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/{id}/set-positive-votes") 
+  public @ResponseBody User SetPositiveVotes (@PathVariable("id") Integer id, @RequestParam Integer numVotes) {
+    if(userRepository.existsById(id)){
+      userRepository.findById(id).get().setPositiveVotes(numVotes);
+      return userRepository.findById(id).get();
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/{id}/set-negative-votes") 
+  public @ResponseBody User SetNegativeVotes (@PathVariable("id") Integer id, @RequestParam Integer numVotes) {
+    if(userRepository.existsById(id)){
+      userRepository.findById(id).get().setNegativeVotes(numVotes);
+      return userRepository.findById(id).get();
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/{id}/set-neutral-votes") 
+  public @ResponseBody User SetNeutralVotes (@PathVariable("id") Integer id, @RequestParam Integer numVotes) {
+    if(userRepository.existsById(id)){
+      userRepository.findById(id).get().setNeutralVotes(numVotes);
+      return userRepository.findById(id).get();
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/{id}/modify-positive-votes") 
+  public @ResponseBody User ModifyPositiveVotes (@PathVariable("id") Integer id, @RequestParam Integer modification) {
+    if(userRepository.existsById(id)){
+      User user = userRepository.findById(id).get();
+      user.setPositiveVotes(user.getPositiveVotes() + modification);
+      return user;
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/{id}/modify-negative-votes") 
+  public @ResponseBody User ModifyNegativeVotes (@PathVariable("id") Integer id, @RequestParam Integer modification) {
+    if(userRepository.existsById(id)){
+      User user = userRepository.findById(id).get();
+      user.setNegativeVotes(user.getNegativeVotes() + modification);
+      return user;
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/{id}/modify-neutral-votes") 
+  public @ResponseBody User ModifyNeutralVotes (@PathVariable("id") Integer id, @RequestParam Integer modification) {
+    if(userRepository.existsById(id)){
+      User user = userRepository.findById(id).get();
+      user.setNeutralVotes(user.getNeutralVotes() + modification);
+      return user;
+    }else{
+      return null;
+    }
+  }
+
+  @PostMapping(path="/user/reset") 
+  public @ResponseBody String ResetUserVotes () {
+    for(User u : userRepository.findAll()){
+      u.setVotingChances(0);
+      u.setPositiveVotes(0);
+      u.setNeutralVotes(0);
+      u.setNegativeVotes(0);
+    }
+    return "Occurrence count reset.";
   }
 
   // Get Mappings
