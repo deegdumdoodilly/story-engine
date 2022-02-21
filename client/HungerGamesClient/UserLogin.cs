@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
+using System.Net;
+using System.IO;
 
 namespace HungerGamesClient
 {
@@ -38,19 +40,14 @@ namespace HungerGamesClient
             UpdateOptions();
         }
 
-        public static void FetchUsers(MySqlConnection cnn)
+        public static void FetchUsers()
         {
-            cnn.Open();
-
-            string query = "SELECT id, username, passhash, voting_chances, positive_votes, neutral_votes, negative_votes, valid_voter FROM hungergames.users;";
-            MySqlCommand command = new MySqlCommand(query, cnn);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
+            // Add users to MainForm.userList
+            List<JsonObject> jsonList = JsonObject.GetJsonsFromRequest("user");
             MainForm.userList = new List<User>();
-            while (reader.Read())
+            foreach (JsonObject j in jsonList)
             {
-                User newUser = new User(reader.GetInt32(0), reader.GetString(1), !(reader.IsDBNull(2)), reader.GetInt32(3), reader.GetInt32(4), reader.GetInt32(5), reader.GetInt32(6), reader.GetBoolean(7));
+                User newUser = new User(j);
                 MainForm.userList.Add(newUser);
             }
         }
@@ -63,7 +60,7 @@ namespace HungerGamesClient
                 using (MySqlConnection cnn = new MySqlConnection())
                 {
                     cnn.ConnectionString = MainForm.GetConnectionString();
-                    FetchUsers(cnn);
+                    FetchUsers();
                     cnn.Close();
 
                     foreach(User user in MainForm.userList)
@@ -72,7 +69,7 @@ namespace HungerGamesClient
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Error reading from users.\nError: " + ex.GetType().Name + "\n" + ex.StackTrace);
+                MessageBox.Show("Error reading from users.\nError: " + ex.GetType().Name + "\n" + ex.ToString());
             }
         }
 
@@ -81,10 +78,12 @@ namespace HungerGamesClient
             if (MainForm.reference is null)
             {
                 MainForm newMainForm = new MainForm();
+                newMainForm.UpdateUserLabel();
                 newMainForm.Show();
             }
             else
             {
+                MainForm.reference.UpdateUserLabel();
                 MainForm.reference.Show();
             }
             this.Hide();

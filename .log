@@ -1,118 +1,111 @@
-2022-02-14 03:25:59,802 Distributing events
-2022-02-14 03:25:59,980 # _do_auth(): user: admin
-2022-02-14 03:25:59,980 # _do_auth(): self._auth_plugin: 
-2022-02-14 03:25:59,980 new_auth_plugin: mysql_native_password
-2022-02-14 03:26:00,098 Success, connection made. Attempting to read list of characters and events.
-2022-02-14 03:26:00,157 Iterating through scene stack.
-2022-02-14 03:26:00,157   Collecting completed ballots for stack_scene #11
-2022-02-14 03:26:00,176   No one voted! Generating a random vote now.
-2022-02-14 03:26:00,197     Chosen outcome is #9
-2022-02-14 03:26:00,274     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:00,274   Updating scene stack #11 to reflect this new winner (#21).
-2022-02-14 03:26:00,295   Applying event effects
-2022-02-14 03:26:00,314   string = '2.status+Swallowed, 2.environment={1}'s Stomach'
-2022-02-14 03:26:00,314     Effect text: 2.status+Swallowed
-2022-02-14 03:26:00,314     Affecting character # 6
-2022-02-14 03:26:00,314       Adding status: "Swallowed"
-2022-02-14 03:26:00,333     Effect text:  2.environment={1}'s Stomach
-2022-02-14 03:26:00,333     Affecting character # 6
-2022-02-14 03:26:00,561       Updating environment: "Blueberry\'s Stomach"
-2022-02-14 03:26:00,631   Collecting completed ballots for stack_scene #12
-2022-02-14 03:26:00,718   No one voted! Generating a random vote now.
-2022-02-14 03:26:00,797     Chosen outcome is #2
-2022-02-14 03:26:01,024     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:01,024   Updating scene stack #12 to reflect this new winner (#22).
-2022-02-14 03:26:01,044   Applying event effects
-2022-02-14 03:26:01,088   string = '1.environment=Frog Stomach, 1.state+Swallowed'
-2022-02-14 03:26:01,088     Effect text: 1.environment=Frog Stomach
-2022-02-14 03:26:01,088     Affecting character #12
-2022-02-14 03:26:01,121       Updating environment: "Frog Stomach"
-2022-02-14 03:26:01,320     Effect text:  1.state+Swallowed
-2022-02-14 03:26:01,320     Affecting character #12
-2022-02-14 03:26:01,321       Warning, did not detect 'status' or 'environment' for effect change
-2022-02-14 03:26:01,321   Collecting completed ballots for stack_scene #13
-2022-02-14 03:26:01,348   No one voted! Generating a random vote now.
-2022-02-14 03:26:01,383     Chosen outcome is #2
-2022-02-14 03:26:01,537     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:01,537   Updating scene stack #13 to reflect this new winner (#23).
-2022-02-14 03:26:01,617   Applying event effects
-2022-02-14 03:26:01,641   string = '1.environment=Frog Stomach, 1.state+Swallowed'
-2022-02-14 03:26:01,641     Effect text: 1.environment=Frog Stomach
-2022-02-14 03:26:01,641     Affecting character #4
-2022-02-14 03:26:01,664       Updating environment: "Frog Stomach"
-2022-02-14 03:26:01,690     Effect text:  1.state+Swallowed
-2022-02-14 03:26:01,690     Affecting character #4
-2022-02-14 03:26:01,691       Warning, did not detect 'status' or 'environment' for effect change
-2022-02-14 03:26:01,691   Collecting completed ballots for stack_scene #14
-2022-02-14 03:26:01,710   No one voted! Generating a random vote now.
-2022-02-14 03:26:01,729     Chosen outcome is #1
-2022-02-14 03:26:01,828     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:01,828   Updating scene stack #14 to reflect this new winner (#24).
-2022-02-14 03:26:01,847   Applying event effects
-2022-02-14 03:26:01,868   string = ''
-2022-02-14 03:26:01,868   Collecting completed ballots for stack_scene #15
-2022-02-14 03:26:01,887   No one voted! Generating a random vote now.
-2022-02-14 03:26:01,907     Chosen outcome is #6
-2022-02-14 03:26:02,015     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:02,015   Updating scene stack #15 to reflect this new winner (#25).
-2022-02-14 03:26:02,038   Applying event effects
-2022-02-14 03:26:02,067   string = ''
-2022-02-14 03:26:02,067   Collecting completed ballots for stack_scene #16
-2022-02-14 03:26:02,097   No one voted! Generating a random vote now.
-2022-02-14 03:26:02,123     Chosen outcome is #7
-2022-02-14 03:26:02,241     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:02,242   Updating scene stack #16 to reflect this new winner (#26).
-2022-02-14 03:26:02,272   Applying event effects
-2022-02-14 03:26:02,293   string = ''
-2022-02-14 03:26:02,293   Collecting completed ballots for stack_scene #17
-2022-02-14 03:26:02,311   No one voted! Generating a random vote now.
-2022-02-14 03:26:02,332     Chosen outcome is #2
-2022-02-14 03:26:02,432     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:02,432   Updating scene stack #17 to reflect this new winner (#27).
-2022-02-14 03:26:02,451   Applying event effects
-2022-02-14 03:26:02,483   string = '1.environment=Frog Stomach, 1.state+Swallowed'
-2022-02-14 03:26:02,483     Effect text: 1.environment=Frog Stomach
-2022-02-14 03:26:02,483     Affecting character #11
-2022-02-14 03:26:02,508       Updating environment: "Frog Stomach"
-2022-02-14 03:26:02,537     Effect text:  1.state+Swallowed
-2022-02-14 03:26:02,538     Affecting character #11
-2022-02-14 03:26:02,538       Warning, did not detect 'status' or 'environment' for effect change
-2022-02-14 03:26:02,538   Collecting completed ballots for stack_scene #18
-2022-02-14 03:26:02,567   No one voted! Generating a random vote now.
-2022-02-14 03:26:02,586     Chosen outcome is #9
-2022-02-14 03:26:02,684     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:02,685   Updating scene stack #18 to reflect this new winner (#28).
-2022-02-14 03:26:02,704   Applying event effects
-2022-02-14 03:26:02,724   string = '2.status+Swallowed, 2.environment={1}'s Stomach'
-2022-02-14 03:26:02,724     Effect text: 2.status+Swallowed
-2022-02-14 03:26:02,724     Affecting character # 8
-2022-02-14 03:26:02,724       Adding status: "Swallowed"
-2022-02-14 03:26:02,744     Effect text:  2.environment={1}'s Stomach
-2022-02-14 03:26:02,744     Affecting character # 8
-2022-02-14 03:26:02,783       Updating environment: "Dmitry\'s Stomach"
-2022-02-14 03:26:02,802   Collecting completed ballots for stack_scene #19
-2022-02-14 03:26:02,822   No one voted! Generating a random vote now.
-2022-02-14 03:26:02,842     Chosen outcome is #2
-2022-02-14 03:26:02,931     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:02,931   Updating scene stack #19 to reflect this new winner (#29).
-2022-02-14 03:26:02,963   Applying event effects
-2022-02-14 03:26:02,979   string = '1.environment=Frog Stomach, 1.state+Swallowed'
-2022-02-14 03:26:02,979     Effect text: 1.environment=Frog Stomach
-2022-02-14 03:26:02,979     Affecting character #10
-2022-02-14 03:26:02,999       Updating environment: "Frog Stomach"
-2022-02-14 03:26:03,020     Effect text:  1.state+Swallowed
-2022-02-14 03:26:03,020     Affecting character #10
-2022-02-14 03:26:03,020       Warning, did not detect 'status' or 'environment' for effect change
-2022-02-14 03:26:03,020   Collecting completed ballots for stack_scene #20
-2022-02-14 03:26:03,039   No one voted! Generating a random vote now.
-2022-02-14 03:26:03,059     Chosen outcome is #2
-2022-02-14 03:26:03,147     Inserted artificial vote, which is automatically the winning vote
-2022-02-14 03:26:03,147   Updating scene stack #20 to reflect this new winner (#30).
-2022-02-14 03:26:03,167   Applying event effects
-2022-02-14 03:26:03,186   string = '1.environment=Frog Stomach, 1.state+Swallowed'
-2022-02-14 03:26:03,187     Effect text: 1.environment=Frog Stomach
-2022-02-14 03:26:03,187     Affecting character #1
-2022-02-14 03:26:03,206       Updating environment: "Frog Stomach"
-2022-02-14 03:26:03,226     Effect text:  1.state+Swallowed
-2022-02-14 03:26:03,226     Affecting character #1
-2022-02-14 03:26:03,226       Warning, did not detect 'status' or 'environment' for effect change
+2022-02-21 16:39:43,222 Distributing events
+2022-02-21 16:39:43,382 # _do_auth(): user: admin
+2022-02-21 16:39:43,382 # _do_auth(): self._auth_plugin: 
+2022-02-21 16:39:43,383 new_auth_plugin: mysql_native_password
+2022-02-21 16:39:43,499 Success, connection made. Attempting to read list of characters and events.
+2022-02-21 16:39:43,641 Selecting Andra's event
+2022-02-21 16:39:43,658   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
+2022-02-21 16:39:43,658   Rejecting event Giant Frog because role is not are available
+2022-02-21 16:39:43,676   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:43,676   Rejecting event Frog Guts because role is not are available
+2022-02-21 16:39:43,698   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:43,698   Rejecting event Frog Stew because role is not are available
+2022-02-21 16:39:43,736   Adding event Ambush, role 1
+2022-02-21 16:39:43,788   Adding event Ambush, role 2
+2022-02-21 16:39:43,789   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 16:39:43,789   Randomly selecting event: Ambush (role 1). Pushing to stack at index 0
+2022-02-21 16:39:43,789 Selecting Kamilah's event
+2022-02-21 16:39:43,789   Looking at existing multiplayer events
+2022-02-21 16:39:43,850   Joining event Ambush on stack, index 0 in role 2
+2022-02-21 16:39:43,850 Selecting Maddi's event
+2022-02-21 16:39:43,850   Looking at existing multiplayer events
+2022-02-21 16:39:43,892   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
+2022-02-21 16:39:43,892   Rejecting event Giant Frog because role is not are available
+2022-02-21 16:39:43,921   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:43,921   Rejecting event Frog Guts because role is not are available
+2022-02-21 16:39:43,944   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:43,944   Rejecting event Frog Stew because role is not are available
+2022-02-21 16:39:43,983   Rejecting Ambush (role 1) since the character is digesting and role does not specifically allow it.
+2022-02-21 16:39:43,983   Rejecting event Ambush because role is not are available
+2022-02-21 16:39:44,022   Rejecting Ambush (role 2) since the character is digesting and role does not specifically allow it.
+2022-02-21 16:39:44,022   Rejecting event Ambush because role is not are available
+2022-02-21 16:39:44,022 Warning, could not find a candidate event for Maddi
+2022-02-21 16:39:44,023 Selecting Raine's event
+2022-02-21 16:39:44,023   Looking at existing multiplayer events
+2022-02-21 16:39:44,042   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
+2022-02-21 16:39:44,042   Rejecting event Giant Frog because role is not are available
+2022-02-21 16:39:44,062   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,062   Rejecting event Frog Guts because role is not are available
+2022-02-21 16:39:44,082   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,082   Rejecting event Frog Stew because role is not are available
+2022-02-21 16:39:44,120   Adding event Ambush, role 1
+2022-02-21 16:39:44,159   Adding event Ambush, role 2
+2022-02-21 16:39:44,159   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 16:39:44,159   Randomly selecting event: Ambush (role 2). Pushing to stack at index 1
+2022-02-21 16:39:44,159 Selecting Tidi's event
+2022-02-21 16:39:44,159   Looking at existing multiplayer events
+2022-02-21 16:39:44,198   Joining event Ambush on stack, index 1 in role 1
+2022-02-21 16:39:44,198 Selecting Amalica's event
+2022-02-21 16:39:44,198   Looking at existing multiplayer events
+2022-02-21 16:39:44,219   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
+2022-02-21 16:39:44,219   Rejecting event Giant Frog because role is not are available
+2022-02-21 16:39:44,241   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,241   Rejecting event Frog Guts because role is not are available
+2022-02-21 16:39:44,258   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,258   Rejecting event Frog Stew because role is not are available
+2022-02-21 16:39:44,298   Adding event Ambush, role 1
+2022-02-21 16:39:44,337   Adding event Ambush, role 2
+2022-02-21 16:39:44,337   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 16:39:44,338   Randomly selecting event: Ambush (role 2). Pushing to stack at index 2
+2022-02-21 16:39:44,338 Selecting Moriah's event
+2022-02-21 16:39:44,338   Looking at existing multiplayer events
+2022-02-21 16:39:44,375   Joining event Ambush on stack, index 2 in role 1
+2022-02-21 16:39:44,376 Selecting Dmitry's event
+2022-02-21 16:39:44,376   Looking at existing multiplayer events
+2022-02-21 16:39:44,396   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
+2022-02-21 16:39:44,396   Rejecting event Giant Frog because role is not are available
+2022-02-21 16:39:44,416   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,416   Rejecting event Frog Guts because role is not are available
+2022-02-21 16:39:44,434   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,434   Rejecting event Frog Stew because role is not are available
+2022-02-21 16:39:44,485   Adding event Ambush, role 1
+2022-02-21 16:39:44,523   Adding event Ambush, role 2
+2022-02-21 16:39:44,523   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 16:39:44,524   Randomly selecting event: Ambush (role 1). Pushing to stack at index 3
+2022-02-21 16:39:44,524 Selecting Tyra's event
+2022-02-21 16:39:44,524   Looking at existing multiplayer events
+2022-02-21 16:39:44,565   Joining event Ambush on stack, index 3 in role 2
+2022-02-21 16:39:44,565 Selecting Marci's event
+2022-02-21 16:39:44,565   Looking at existing multiplayer events
+2022-02-21 16:39:44,581   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
+2022-02-21 16:39:44,581   Rejecting event Giant Frog because role is not are available
+2022-02-21 16:39:44,613   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,613   Rejecting event Frog Guts because role is not are available
+2022-02-21 16:39:44,632   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,632   Rejecting event Frog Stew because role is not are available
+2022-02-21 16:39:44,671   Adding event Ambush, role 1
+2022-02-21 16:39:44,708   Adding event Ambush, role 2
+2022-02-21 16:39:44,708   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 16:39:44,708   Randomly selecting event: Ambush (role 1). Pushing to stack at index 4
+2022-02-21 16:39:44,708 Selecting Coco's event
+2022-02-21 16:39:44,709   Looking at existing multiplayer events
+2022-02-21 16:39:44,747   Joining event Ambush on stack, index 4 in role 2
+2022-02-21 16:39:44,747 Selecting Shiraori's event
+2022-02-21 16:39:44,747   Looking at existing multiplayer events
+2022-02-21 16:39:44,768   Rejected Giant Frog, role 1 due to mismatched environment (required Woods, actual None)
+2022-02-21 16:39:44,768   Rejecting event Giant Frog because role is not are available
+2022-02-21 16:39:44,786   Rejected Frog Guts, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,786   Rejecting event Frog Guts because role is not are available
+2022-02-21 16:39:44,817   Rejected Frog Stew, role 1 due to mismatched environment (required FrogStomach, actual None)
+2022-02-21 16:39:44,818   Rejecting event Frog Stew because role is not are available
+2022-02-21 16:39:44,856   Adding event Ambush, role 1
+2022-02-21 16:39:44,905   Adding event Ambush, role 2
+2022-02-21 16:39:44,905   Candidates finalized, options are: ['Ambush, role 1', 'Ambush, role 2']
+2022-02-21 16:39:44,906   Randomly selecting event: Ambush (role 1). Pushing to stack at index 5
+2022-02-21 16:39:44,906 Selecting Blueberry's event
+2022-02-21 16:39:44,906   Looking at existing multiplayer events
+2022-02-21 16:39:44,943   Joining event Ambush on stack, index 5 in role 2
+2022-02-21 16:39:49,863 Adding item to stack: {'event_id': 4, 'participants': [1, 5]}
+2022-02-21 16:39:50,775 Inserting scene_stack with values (4, 1, "1, 5");
+2022-02-21 16:40:32,829 Starting new HTTP connection (1): localhost:8080
+2022-02-21 16:41:24,108 http://localhost:8080 "POST /api/performance HTTP/1.1" 500 None

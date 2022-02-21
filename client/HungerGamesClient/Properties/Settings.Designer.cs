@@ -58,5 +58,17 @@ namespace HungerGamesClient.Properties {
                 this["db_name"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:8080/api")]
+        public string api_url {
+            get {
+                return ((string)(this["api_url"]));
+            }
+            set {
+                this["api_url"] = value;
+            }
+        }
     }
 }

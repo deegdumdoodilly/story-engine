@@ -1,11 +1,9 @@
-delete from statuses;
+delete from status;
 
-ALTER TABLE statuses auto_increment = 1;
+ALTER TABLE status auto_increment = 1;
 
-insert into statuses (character_id, status) values (2, "Digesting");
+insert into status (id, character_id, status) values (1, 2, "Digesting");
 
-insert into statuses (character_id, status) values (1, "HORNY");
+insert into status (id, character_id, status) values (2, 1, "HORNY");
 
-select * from statuses;
-
-delete from statuses where character_id = 1 and status = 'HORNY';
+select * from status;

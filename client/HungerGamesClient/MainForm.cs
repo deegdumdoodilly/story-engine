@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
+using System.IO;
+using System.Net;
 
 namespace HungerGamesClient
 {
@@ -202,6 +204,7 @@ namespace HungerGamesClient
         public int id;
         public string username;
         public bool hasPassword;
+        public string passhash;
 
         public int votingChances;
         public int positiveVotes;
@@ -214,6 +217,7 @@ namespace HungerGamesClient
             this.id = id;
             this.username = username;
             this.hasPassword = hasPassword;
+            this.passhash = "";
 
             this.votingChances = votingChances;
             this.positiveVotes = positiveVotes;
@@ -221,6 +225,21 @@ namespace HungerGamesClient
             this.neutralVotes = neutralVotes;
 
             this.validVoter = validVoter;
+        }
+
+        public User(JsonObject obj)
+        {
+            this.id = obj.GetInt("id");
+            this.username = obj.GetString("username");
+            this.hasPassword = obj.GetBool("hasPassword");
+            this.passhash = obj.GetString("passhash");
+
+            this.votingChances = obj.GetInt("votingChances");
+            this.positiveVotes = obj.GetInt("positiveVotes");
+            this.negativeVotes = obj.GetInt("negativeVotes");
+            this.neutralVotes = obj.GetInt("neutralVotes");
+
+            this.validVoter = obj.GetBool("validVoter");
         }
 
         public bool CanCastNegativeVote()
@@ -231,6 +250,18 @@ namespace HungerGamesClient
         public override string ToString()
         {
             return username;
+        }
+
+        public string ToJson()
+        {
+            return "{\"id\":" + id
+                + ",\"username\":\"" + username
+                + ",\"passhash\":\"" + passhash
+                + ",\"votingChances\":" + votingChances
+                + ",\"positiveVotes\":" + positiveVotes
+                + ",\"neutralVotes\":" + neutralVotes
+                + ",\"negativeVotes\":" + negativeVotes
+                + ",\"validVoter\":" + validVoter.ToString().ToLower() + "}";
         }
     }
    
@@ -289,6 +320,11 @@ namespace HungerGamesClient
                                                    "database=" + Properties.Settings.Default.db_name;
         }
         
+        public static void Log(string s)
+        {
+
+        }
+
         private void RefreshButton_Click(object sender, EventArgs e)
         {
             RefreshLog();
@@ -626,4 +662,109 @@ namespace HungerGamesClient
         }
 
     }
+
+    public class JsonObject
+    {
+        public Dictionary<string, string> pairings;
+
+        public JsonObject(string body)
+        {
+            pairings = new Dictionary<string, string>();
+
+            char[] characters = body.ToCharArray();
+
+            string[] fieldAndValue = new string[] { "", "" };
+            int fieldAndValueIndex = 0;
+
+            bool inQuote = false;
+
+            for (int i = 0; i < characters.Length; i++)
+            {
+                char c = characters[i];
+                if (inQuote)
+                {
+                    if (c == '\"')
+                    {
+                        inQuote = false;
+                    }
+                    else
+                    {
+                        fieldAndValue[fieldAndValueIndex] += c;
+                    }
+                }
+                else
+                {
+                    switch (c)
+                    {
+                        case '\"':
+                            inQuote = true;
+                            break;
+                        case ':':
+                            fieldAndValueIndex = 1;
+                            break;
+                        case ',':
+                            pairings.Add(fieldAndValue[0], fieldAndValue[1]);
+                            fieldAndValue[0] = "";
+                            fieldAndValue[1] = "";
+                            fieldAndValueIndex = 0;
+                            break;
+                        default:
+                            fieldAndValue[fieldAndValueIndex] += c;
+                            break;
+                    }
+                }
+            }
+        }
+
+        public static JsonObject GetJsonFromRequest(string url)
+        {
+            return null;
+        }
+
+        public static List<JsonObject> GetJsonsFromRequest(string endpoint)
+        {
+            string url = Properties.Settings.Default.api_url + "/user";
+            WebRequest request = WebRequest.Create(url);
+            request.Method = "GET";
+
+            StreamReader responseReader = new StreamReader(request.GetResponse().GetResponseStream());
+            char[] trimChars = new char[] { '[', ']', '{', '}' };
+            string[] responseString = responseReader.ReadLine().Trim(trimChars).Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+
+            List<JsonObject> result = new List<JsonObject>();
+            foreach (string s in responseString)
+            {
+                result.Add(new JsonObject(s));
+            }
+            return result;
+        }
+
+        public string GetString(string key)
+        {
+            if (!pairings.ContainsKey(key) || pairings[key] == "null")
+            {
+                return "";
+            }
+            return pairings[key];
+        }
+
+        public int GetInt(string key)
+        {
+            if (!pairings.ContainsKey(key) || pairings[key] == "null")
+            {
+                return -1;
+            }
+            return int.Parse(pairings[key]);
+        }
+
+        public bool GetBool(string key)
+        {
+            if (!pairings.ContainsKey(key) || pairings[key] == "null")
+            {
+                return false;
+            }
+            return pairings[key].ToLower() == "true";
+        }
+    }
+
 }

@@ -11,5 +11,8 @@
     <Setting Name="db_name" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="api_url" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://localhost:8080/api</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.Extensions.Hosting;
 
 namespace HungerGamesClient
 {
@@ -18,6 +19,8 @@ namespace HungerGamesClient
         [STAThread]
         static void Main()
         {
+            // Logging
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -41,7 +44,7 @@ namespace HungerGamesClient
 
                         cnn.ConnectionString = MainForm.GetConnectionString();
 
-                        UserLogin.FetchUsers(cnn);
+                        UserLogin.FetchUsers();
                         cnn.Close();
                         cnn.Open();
                         user = MainForm.userList.Find(x => x.username == username);
