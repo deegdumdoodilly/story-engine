@@ -43,7 +43,7 @@ namespace HungerGamesClient
         public static void FetchUsers()
         {
             // Add users to MainForm.userList
-            List<JsonObject> jsonList = JsonObject.GetJsonsFromRequest("user");
+            List<JsonObject> jsonList = JsonObject.GetJsonsFromRequest("/users");
             MainForm.userList = new List<User>();
             foreach (JsonObject j in jsonList)
             {
@@ -57,15 +57,10 @@ namespace HungerGamesClient
             userDropdown.Items.Clear();
             try
             {
-                using (MySqlConnection cnn = new MySqlConnection())
-                {
-                    cnn.ConnectionString = MainForm.GetConnectionString();
-                    FetchUsers();
-                    cnn.Close();
+                FetchUsers();
 
-                    foreach(User user in MainForm.userList)
-                        userDropdown.Items.Add(user);
-                }
+                foreach(User user in MainForm.userList)
+                    userDropdown.Items.Add(user);
             }
             catch(Exception ex)
             {
@@ -97,54 +92,42 @@ namespace HungerGamesClient
                 return;
             }
             User selectedUser = (User) userDropdown.SelectedItem;
-            if (selectedUser.hasPassword)
+            if (selectedUser.HasPassword())
             {
                 // Requires password
                 try
                 {
-                    using (MySqlConnection cnn = new MySqlConnection())
+                    JsonObject userJson = null;
+                    try
                     {
                         // Retrieve record with matching username
-                        cnn.ConnectionString = MainForm.GetConnectionString();
-                        cnn.Open();
+                        userJson = JsonObject.GetJsonFromRequest("/users?username=" + selectedUser.username);
+                    }catch(WebException ex)
+                    {
+                        MessageBox.Show("Username not found. Restart the application or DM deeg if problem persists.");
+                    }
+                    // Found user, compare passwords
+                    string passhash = userJson.GetString("passhash");
+                    int userId = userJson.GetInt("id");
+                    string username = userJson.GetString("username");
 
-                        string query = "SELECT passhash, id, username FROM hungergames.users WHERE username = \'" + selectedUser.username + "\';";
-                        MySqlCommand command = new MySqlCommand(query, cnn);
-                        MySqlDataReader reader = command.ExecuteReader();
 
-                        if (!reader.Read())
-                        {
-                            // Found no matching user for saved login
-                            MessageBox.Show("Username not found. Restart the application or DM deeg if problem persists.");
-                            cnn.Close();
-                        }
-                        else
-                        {
-                            // Found user, compare passwords
-                            string passhash = reader.GetString(0);
-                            int userId = reader.GetInt32(1);
-                            string username = reader.GetString(2);
-
-                            cnn.Close();
-
-                            SHA256 hashAlgo = SHA256.Create();
-                            byte[] output = hashAlgo.ComputeHash(Encoding.ASCII.GetBytes(passwordField.Text));
-                            string localPasshash = BitConverter.ToString(output);
-                            if (passhash == localPasshash)
-                            {
-                                //login successful
-                                MainForm.currentUser = selectedUser;
-                                SaveOrDeleteLoginInfo(selectedUser);
-                                if (! (MainForm.reference is null))
-                                    MainForm.reference.UpdateUserLabel();
-                                ShowMainForm();
-                            }
-                            else
-                            {
-                                //local/DB password mismatch
-                                MessageBox.Show("Error, incorrect password. DM deeg to get it reset at the price of one RP per reset.");
-                            }
-                        }
+                    SHA256 hashAlgo = SHA256.Create();
+                    byte[] output = hashAlgo.ComputeHash(Encoding.ASCII.GetBytes(passwordField.Text));
+                    string localPasshash = BitConverter.ToString(output);
+                    if (passhash == localPasshash)
+                    {
+                        //login successful
+                        MainForm.currentUser = selectedUser;
+                        SaveOrDeleteLoginInfo(selectedUser);
+                        if (! (MainForm.reference is null))
+                            MainForm.reference.UpdateUserLabel();
+                        ShowMainForm();
+                    }
+                    else
+                    {
+                        //local/DB password mismatch
+                        MessageBox.Show("Error, incorrect password. DM deeg to get it reset at the price of one RP per reset.");
                     }
                 }
                 catch (Exception ex)
@@ -190,7 +173,7 @@ namespace HungerGamesClient
                 saveCheckBox.Checked = true;
             }
 
-            if (((User)userDropdown.SelectedItem).hasPassword)
+            if (((User)userDropdown.SelectedItem).HasPassword())
             {
                 if(passwordPanel.Height == 0)
                 {

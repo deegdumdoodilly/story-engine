@@ -8,20 +8,17 @@ import javax.persistence.Id;
 import com.fasterxml.jackson.databind.JsonSerializable.Base;
 
 @Entity
-public class Status {
+public class Time {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
-    private Integer actorId;
-
-    private String status;
+    private Integer time;
     
-    public Status(){};
+    public Time(){};
 
-    public Status(Integer actorId, String status){
-        this.actorId = actorId;
-        this.status = status;
+    public Time(Integer time){
+        this.time = time;
     }
 
     public Integer getId() {
@@ -32,34 +29,21 @@ public class Status {
         this.id = id;
     }
 
-    public Integer getActorId() {
-        return this.actorId;
+    public Integer getTime() {
+        return this.time;
     }
 
-    public void setActorId(Integer actorId) {
-        this.actorId = actorId;
+    public void setTime(Integer time) {
+        this.time = time;
     }
 
-    public String getStatus() {
-        return this.status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Status id(Integer id) {
+    public Time id(Integer id) {
         setId(id);
         return this;
     }
 
-    public Status actorId(Integer actorId) {
-        setActorId(actorId);
-        return this;
-    }
-
-    public Status status(String status) {
-        setStatus(status);
+    public Time time(Integer time) {
+        setTime(time);
         return this;
     }
 
@@ -67,11 +51,11 @@ public class Status {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (!(o instanceof Status)) {
+        if (!(o instanceof Time)) {
             return false;
         }
-        Status status = (Status) o;
-        return (id == status.id);
+        Time time = (Time) o;
+        return (id == time.id);
     }
 
     @Override
@@ -83,8 +67,7 @@ public class Status {
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", actorId='" + getActorId() + "'" +
-            ", status='" + getStatus() + "'" +
+            ", characterId='" + getTime() + "'" +
             "}";
     }
 }

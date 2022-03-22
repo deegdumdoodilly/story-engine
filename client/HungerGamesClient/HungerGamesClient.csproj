@@ -198,18 +198,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actor.cs" />
+    <Compile Include="JsonObject.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Performance.cs" />
+    <Compile Include="RosterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RosterForm.Designer.cs">
+      <DependentUpon>RosterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Scene.cs" />
     <Compile Include="SetDBName.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SetDBName.Designer.cs">
       <DependentUpon>SetDBName.cs</DependentUpon>
     </Compile>
+    <Compile Include="User.cs" />
     <Compile Include="UserLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -226,6 +237,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RosterForm.resx">
+      <DependentUpon>RosterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SetDBName.resx">
       <DependentUpon>SetDBName.cs</DependentUpon>

@@ -40,6 +40,7 @@
             this.secondaryTextBox = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.loginLabel = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.logPanel.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -187,17 +188,30 @@
             this.loginLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.loginLabel.Click += new System.EventHandler(this.loginLabel_Click);
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Font = new System.Drawing.Font("Baskerville Old Face", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button1.Location = new System.Drawing.Point(751, 14);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(149, 30);
+            this.button1.TabIndex = 23;
+            this.button1.Text = "Current Roster";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 564);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.loginLabel);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.votingBoothButton);
             this.Controls.Add(this.logPanel);
-            this.MaximumSize = new System.Drawing.Size(1083, 1200);
-            this.MinimumSize = new System.Drawing.Size(300, 39);
+            this.MaximumSize = new System.Drawing.Size(2083, 1200);
+            this.MinimumSize = new System.Drawing.Size(700, 300);
             this.Name = "MainForm";
             this.Text = "Hunger Games";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -223,6 +237,7 @@
         private System.Windows.Forms.TextBox secondaryTextBox;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label loginLabel;
+        private System.Windows.Forms.Button button1;
     }
 }
 

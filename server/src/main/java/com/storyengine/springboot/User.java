@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import com.fasterxml.jackson.databind.JsonSerializable.Base;
 
 @Entity // This tells Hibernate to make a table out of this class
-public class User {
+public class User implements Comparable{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
@@ -71,6 +71,10 @@ public class User {
         this.votingChances = votingChances;
     }
 
+    public void incrementVotingChances() {
+        this.votingChances += 1;
+    }
+
     public Integer getPositiveVotes() {
         return this.positiveVotes;
     }
@@ -101,6 +105,11 @@ public class User {
 
     public void setValidVoter(Boolean validVoter) {
         this.validVoter = validVoter;
+    }
+
+    @Override
+    public int compareTo(Object o){
+        return Integer.compare(this.votingChances, ((User) o).votingChances);
     }
 
     @Override

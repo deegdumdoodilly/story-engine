@@ -50,6 +50,7 @@
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.checkboxText3 = new System.Windows.Forms.Label();
             this.submitButton = new System.Windows.Forms.Button();
+            this.VoterNameLabel = new System.Windows.Forms.Label();
             this.portraitPanel.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -93,10 +94,10 @@
             this.portraitPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.portraitPanel.Controls.Add(this.tableLayoutPanel2);
             this.portraitPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.portraitPanel.Location = new System.Drawing.Point(171, 55);
+            this.portraitPanel.Location = new System.Drawing.Point(171, 72);
             this.portraitPanel.Name = "portraitPanel";
             this.portraitPanel.Padding = new System.Windows.Forms.Padding(20, 0, 20, 0);
-            this.portraitPanel.Size = new System.Drawing.Size(777, 115);
+            this.portraitPanel.Size = new System.Drawing.Size(777, 98);
             this.portraitPanel.TabIndex = 14;
             this.portraitPanel.WrapContents = false;
             // 
@@ -148,10 +149,11 @@
             // 
             this.descriptionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.descriptionLabel.AutoSize = true;
+            this.descriptionLabel.Font = new System.Drawing.Font("Baskerville Old Face", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.descriptionLabel.Location = new System.Drawing.Point(10, 10);
             this.descriptionLabel.Margin = new System.Windows.Forms.Padding(10);
             this.descriptionLabel.Name = "descriptionLabel";
-            this.descriptionLabel.Size = new System.Drawing.Size(757, 13);
+            this.descriptionLabel.Size = new System.Drawing.Size(757, 36);
             this.descriptionLabel.TabIndex = 0;
             this.descriptionLabel.Text = "The text of the event, which will usually be quite long and often threaten to tra" +
     "il off the edge of the window. We need to ensure that it always stays visible!";
@@ -177,7 +179,7 @@
             this.checkboxTable.Controls.Add(this.checkboxText5, 1, 4);
             this.checkboxTable.Controls.Add(this.checkBox1, 0, 0);
             this.checkboxTable.Controls.Add(this.checkboxText3, 1, 2);
-            this.checkboxTable.Location = new System.Drawing.Point(3, 36);
+            this.checkboxTable.Location = new System.Drawing.Point(3, 59);
             this.checkboxTable.Name = "checkboxTable";
             this.checkboxTable.RowCount = 6;
             this.checkboxTable.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -343,7 +345,7 @@
             // 
             // submitButton
             // 
-            this.submitButton.Location = new System.Drawing.Point(3, 360);
+            this.submitButton.Location = new System.Drawing.Point(780, 3);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(152, 23);
             this.submitButton.TabIndex = 2;
@@ -351,11 +353,21 @@
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
             // 
+            // VoterNameLabel
+            // 
+            this.VoterNameLabel.AutoSize = true;
+            this.VoterNameLabel.Font = new System.Drawing.Font("Baskerville Old Face", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VoterNameLabel.Location = new System.Drawing.Point(171, 52);
+            this.VoterNameLabel.Name = "VoterNameLabel";
+            this.VoterNameLabel.Size = new System.Drawing.Size(0, 14);
+            this.VoterNameLabel.TabIndex = 16;
+            // 
             // VotingBooth
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(960, 614);
+            this.Controls.Add(this.VoterNameLabel);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.portraitPanel);
             this.Controls.Add(this.sceneNameLabel);
@@ -400,5 +412,6 @@
         private System.Windows.Forms.Button submitButton;
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.Label checkboxText3;
+        private System.Windows.Forms.Label VoterNameLabel;
     }
 }

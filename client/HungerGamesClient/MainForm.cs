@@ -1,295 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Data.SqlClient;
-using MySql.Data.MySqlClient;
-using System.IO;
-using System.Net;
 
 namespace HungerGamesClient
-{
-    public struct StackScene
-    {
-        public int stackId;
-        public Scene scene;
-        public bool inProgress;
-        public Outcome outcome;
-        public int winningVoteId;
-        public string flavor;
-        public Character[] participants;
-
-        public StackScene(int id, Scene scene, string participants, List<Character> characterListReference)
-        {
-            this.stackId = id;
-            this.scene = scene;
-            inProgress = true;
-            winningVoteId = -1;
-            flavor = "";
-            string[] participantsSplit = participants.Split(',');
-            this.participants = new Character[participantsSplit.Length];
-            for(int i = 0; i < participantsSplit.Length; i++)
-            {
-                int participantId = int.Parse(participantsSplit[i]);
-                this.participants[i] = characterListReference.Find(character => character.id == participantId);
-            }
-            outcome = new Outcome();
-        }
-
-        public StackScene(int id, Scene scene, string participants, List<Character> characterListReference, bool inProgress, int winningVoteId)
-            : this(id, scene, participants, characterListReference)
-        {
-            this.inProgress = inProgress;
-            this.winningVoteId = winningVoteId;
-            flavor = "";
-        }
-
-        public StackScene(int id, Scene scene, string participants, List<Character> characterListReference, bool inProgress, int winningVoteId, string flavor)
-            : this(id, scene, participants, characterListReference, inProgress, winningVoteId)
-        {
-            this.flavor = flavor;
-        }
-
-        public string ToMySQLString()
-        {
-            string participantString = "";
-            foreach(Character c in participants)
-            {
-                participantString += (c.id + ",");
-            }
-            participantString = participantString.Substring(0, participantString.Length - 1);
-            return String.Format("({0},{1},{2},\"{3}\",\"{4}\")", scene.sceneId, inProgress ? 1 : 0, winningVoteId, flavor, participantString);
-        }
-
-        public override string ToString()
-        {
-            string output = scene.sceneName + " (";
-            foreach(Character character in participants)
-            {
-                output += character.name + ", ";
-            }
-            return output.Substring(0, output.Length - 2) + ")";
-        }
-
-        public string GetDescription()
-        {
-            string description = scene.description;
-            for (int role = 1; role <= participants.Length; role++)
-            {
-                string name = participants[role - 1].name;
-                description = description.Replace("{" + role + "}", name);
-            }
-            description = description.Replace("}", "");
-            description = description.Replace("{", "");
-
-
-            return description;
-        }
-    }
-
-    public struct Scene
-    {
-        public int sceneId;
-        public string sceneName;
-        public List<Requirement> requirements;
-        public List<Outcome> outcomes;
-        public string description;
-
-        public Scene(int sceneId, string sceneName, List<Requirement> requirements, List<Outcome> outcomes, string description)
-        {
-            this.sceneId = sceneId;
-            this.sceneName = sceneName;
-            this.requirements = requirements;
-            this.outcomes = outcomes;
-            this.description = description;
-        }
-    }
-
-    public struct Requirement
-    {
-        public int id;
-        public int sceneId;
-        public string requirement;
-        public int role;
-
-        public Requirement(int id, int sceneId, string requirement, int role)
-        {
-            this.id = id;
-            this.sceneId = sceneId;
-            this.requirement = requirement;
-            this.role = role;
-        }
-    }
-
-    public enum OutcomeType { Positive, Negative, Neutral };
-
-    public struct Outcome
-    {
-
-        public int id;
-        public int sceneId;
-        public OutcomeType outcomeType;
-        public string effect;
-        public string description;
-
-        public Outcome(int id, int sceneId, int outcomeInt, string effect, string description)
-        {
-            this.id = id;
-            this.sceneId = sceneId;
-            this.effect = effect;
-            this.description = description;
-            if (outcomeInt < 0)
-                this.outcomeType = OutcomeType.Negative;
-            else if (outcomeInt > 0)
-                this.outcomeType = OutcomeType.Positive;
-            else
-                this.outcomeType = OutcomeType.Neutral;
-        }
-
-        public string GetDescription(StackScene parentScene)
-        {
-            string result = description;
-            for (int role = 1; role <= parentScene.participants.Length; role++)
-            {
-                string name = parentScene.participants[role - 1].name;
-                result = result.Replace("{" + role + "}", name);
-            }
-            result = result.Replace("}", "");
-            result = result.Replace("{", "");
-
-            return result;
-        }
-    }
-
-    public struct Character
-    {
-        public int id;
-        public string name;
-        public int lastAte;
-        public string environment;
-
-        public Character(int id, string name, int lastAte, string environment)
-        {
-            this.id = id;
-            this.name = name;
-            this.lastAte = lastAte;
-            this.environment = environment;
-        }
-
-        public override string ToString()
-        {
-            return name;
-        }
-
-        public override bool Equals(object obj)
-        {
-            Character other = (Character)obj;
-            return (this.id == other.id &&
-                    this.name == other.name);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-    }
-    
-    public struct User
-    {
-        public int id;
-        public string username;
-        public bool hasPassword;
-        public string passhash;
-
-        public int votingChances;
-        public int positiveVotes;
-        public int negativeVotes;
-        public int neutralVotes;
-
-        public bool validVoter;
-        public User(int id, string username, bool hasPassword, int votingChances, int positiveVotes, int negativeVotes, int neutralVotes, bool validVoter)
-        {
-            this.id = id;
-            this.username = username;
-            this.hasPassword = hasPassword;
-            this.passhash = "";
-
-            this.votingChances = votingChances;
-            this.positiveVotes = positiveVotes;
-            this.negativeVotes = negativeVotes;
-            this.neutralVotes = neutralVotes;
-
-            this.validVoter = validVoter;
-        }
-
-        public User(JsonObject obj)
-        {
-            this.id = obj.GetInt("id");
-            this.username = obj.GetString("username");
-            this.hasPassword = obj.GetBool("hasPassword");
-            this.passhash = obj.GetString("passhash");
-
-            this.votingChances = obj.GetInt("votingChances");
-            this.positiveVotes = obj.GetInt("positiveVotes");
-            this.negativeVotes = obj.GetInt("negativeVotes");
-            this.neutralVotes = obj.GetInt("neutralVotes");
-
-            this.validVoter = obj.GetBool("validVoter");
-        }
-
-        public bool CanCastNegativeVote()
-        {
-            return ((positiveVotes * 3 + neutralVotes) - negativeVotes * 3) >= 3;
-        }
-
-        public override string ToString()
-        {
-            return username;
-        }
-
-        public string ToJson()
-        {
-            return "{\"id\":" + id
-                + ",\"username\":\"" + username
-                + ",\"passhash\":\"" + passhash
-                + ",\"votingChances\":" + votingChances
-                + ",\"positiveVotes\":" + positiveVotes
-                + ",\"neutralVotes\":" + neutralVotes
-                + ",\"negativeVotes\":" + negativeVotes
-                + ",\"validVoter\":" + validVoter.ToString().ToLower() + "}";
-        }
-    }
-   
+{   
     public struct Ballot
     {
         public int id;
-        public StackScene stackScene;
+        public Performance performance;
         public User voter;
         public Outcome chosenOutcome;
         public bool hasChosenOutcome;
         public bool inProgress;
 
-        public Ballot(int id, StackScene stackScene, int voterId, Outcome chosenOutcome, bool inProgress)
+        public Ballot(int id, Performance performance, int voterId, Outcome chosenOutcome, bool inProgress)
         {
             this.id = id;
-            this.stackScene = stackScene;
+            this.performance = performance;
             this.voter = MainForm.userList.Find(x => x.id == voterId);
             this.chosenOutcome = chosenOutcome;
             this.inProgress = inProgress;
             hasChosenOutcome = (chosenOutcome.id == -1);
         }
 
+        public Ballot(JsonObject json)
+        {
+            id = json.GetInt("id");
+            performance = MainForm.performanceList.Find(x => x.id == json.GetInt("performanceId"));
+            voter = MainForm.userList.Find(x => x.id == json.GetInt("voterId"));
+            inProgress = json.GetBool("inProgress");
+            if (json.GetBool("hasChosenOutcome")) {
+                hasChosenOutcome = true;
+                int chosenOutcomeId = json.GetInt("chosenOutcomeId");
+                chosenOutcome = new Outcome();
+                foreach (Outcome outcome in performance.scene.outcomes)
+                {
+                    if(outcome.id == chosenOutcomeId)
+                    {
+                        chosenOutcome = outcome;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                hasChosenOutcome = false;
+                chosenOutcome = new Outcome();
+            }
+        }
+
         public override string ToString()
         {
-            string output = stackScene.scene.sceneName + " (";
-            foreach (Character character in stackScene.participants)
+            string output = performance.scene.sceneName + " (";
+            foreach (Actor actor in performance.participants)
             {
-                output += character.name + ", ";
+                output += actor.name + ", ";
             }
             return output.Substring(0, output.Length - 2) + ")";
         }
@@ -303,13 +69,15 @@ namespace HungerGamesClient
         }
 
         public static MainForm reference;
-        public static List<StackScene> stackSceneList;
-        public static List<Character> characterList;
+        public static List<Scene> sceneList;
+        public static List<Performance> performanceList;
+        public static List<Actor> actorList;
         public static List<Ballot> ballotList;
         public static List<User> userList;
 
         public static User currentUser;
         private VotingBooth votingBooth;
+        private RosterForm rosterForm;
         private UserLogin userLogin;
 
         public static string GetConnectionString()
@@ -347,7 +115,7 @@ namespace HungerGamesClient
         {
             SyncData();
             logPanel.Controls.Clear();
-            foreach (StackScene s in stackSceneList)
+            foreach (Performance s in performanceList)
             {
                 if (!s.inProgress)
                 {
@@ -361,15 +129,10 @@ namespace HungerGamesClient
         {
             try
             {
-                using (MySqlConnection cnn = new MySqlConnection())
-                {
-
-                    cnn.ConnectionString = GetConnectionString();
-                    FetchCharacters(cnn);
-                    FetchSceneStack(cnn);
-                    FetchBallots(cnn, new int[] { 1, 2, 3, 4, 5, 6, 7});
-                    cnn.Close();
-                }
+                sceneList = new List<Scene>();
+                FetchActors();
+                FetchPerformances();
+                FetchBallots();
             }
             catch (Exception ex)
             {
@@ -377,198 +140,70 @@ namespace HungerGamesClient
             }
         }
 
-        public static void FetchCharacters(MySqlConnection cnn)
+        public static void FetchActors()
         {
-            cnn.Open();
-            string query = "SELECT id, name, last_ate, environment FROM hungergames.characters;";
-            MySqlCommand command = new MySqlCommand(query, cnn);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            characterList = new List<Character>();
-            while (reader.Read())
+            List<JsonObject> jsonList = JsonObject.GetJsonsFromRequest("/actors");
+            actorList = new List<Actor>();
+            foreach (JsonObject j in jsonList)
             {
-                // int id, string name, int lastAte, string environment
-                Character newCharacter = new Character(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2), reader.GetString(3));
-                characterList.Add(newCharacter);
-            }
-            cnn.Close();
-        }
-
-        public static void FetchSceneStack(MySqlConnection cnn)
-        {
-            cnn.Open();
-            string query = "SELECT id, scene_id, participants, in_progress, winning_vote, flavor FROM hungergames.scene_stack;";
-            MySqlCommand command = new MySqlCommand(query, cnn);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            stackSceneList = new List<StackScene>();
-
-            // Need to do these seperately to maintain the one connection per client policy
-            List<int> id = new List<int>();
-            List<int> sceneId = new List<int>();
-            List<string> participants = new List<string>();
-            List<bool> inProgress = new List<bool>();
-            List<int> winningVote = new List<int>();
-            List<string> flavor = new List<string>();
-            while (reader.Read())
-            {
-                id.Add(reader.GetInt32(0));
-                sceneId.Add(reader.GetInt32(1));
-                participants.Add(reader.GetString(2));
-                inProgress.Add(reader.GetBoolean(3));
-                if (!reader.IsDBNull(4))
-                {
-                    winningVote.Add(reader.GetInt32(4));
-                }
-                else
-                {
-                    winningVote.Add(-1);
-                }
-                flavor.Add(reader.GetString(5));
-            }
-            cnn.Close();
-
-
-            for (int i = 0; i < id.Count; i++)
-            {
-                StackScene newStackScene = new StackScene(id[i], FetchScene(cnn, sceneId[i]), participants[i], characterList, inProgress[i], winningVote[i], flavor[i]);
-                if (!inProgress[i])
-                {
-                    cnn.Open();
-                    query = "SELECT id, chosen_outcome FROM hungergames.votes WHERE scene_stack_id = " + newStackScene.stackId + ";";
-                    command = new MySqlCommand(query, cnn);
-
-                    reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        if(reader.GetInt32(0) == newStackScene.winningVoteId)
-                        {
-                            newStackScene.outcome = newStackScene.scene.outcomes.Find(x => x.id == reader.GetInt32(1));
-                        }
-                    }
-                    cnn.Close();
-                }
-                stackSceneList.Add(newStackScene);
+                Actor newActor = new Actor(j);
+                actorList.Add(newActor);
             }
         }
 
-        public static void FetchBallots(MySqlConnection cnn, int[] voter_ids)
+        public static void FetchPerformances()
         {
-            cnn.Open();
+            performanceList = new List<Performance>();
 
-            string permittedIds = "(";
-            foreach (int i in voter_ids)
-                permittedIds += i + ",";
-            permittedIds = permittedIds.Substring(0, permittedIds.Length - 1) + ")";
+            List<JsonObject> performanceJsons = JsonObject.GetJsonsFromRequest("/performances");
 
-            string query = "SELECT id, scene_stack_id, voter_id, chosen_outcome, in_progress, has_chosen_outcome FROM hungergames.votes WHERE voter_id IN " + permittedIds + " OR in_progress = 0;";
-            MySqlCommand command = new MySqlCommand(query, cnn);
+            foreach(JsonObject json in performanceJsons)
+            {
+                performanceList.Add(new Performance(json));
+            }
+        }
 
-            MySqlDataReader reader = command.ExecuteReader();
+        public static void FetchBallots()
+        {
+            List<JsonObject> voteJSONs = JsonObject.GetJsonsFromRequest("/votes");
 
             ballotList = new List<Ballot>();
-            while (reader.Read())
+
+            foreach(JsonObject json in voteJSONs)
             {
-                int ballotId = reader.GetInt32(0);
-                int sceneStackId = reader.GetInt32(1);
-                StackScene stackScene = MainForm.stackSceneList.Find(x => x.stackId == sceneStackId);
-                Outcome chosenOutcome = new Outcome();
-                int voterId = -1;
-                if (!reader.IsDBNull(2))
-                    voterId = reader.GetInt32(2);
-                if (reader.GetBoolean(5))
+                ballotList.Add(new Ballot(json));
+            }
+        }
+
+        public static Scene GetScene(int id)
+        {
+            foreach(Scene s in sceneList){
+                if(s.sceneId == id)
                 {
-                    int outcomeId = reader.GetInt32(3);
-                    chosenOutcome = stackScene.scene.outcomes.Find(x => x.id == outcomeId);
+                    return s;
                 }
-                Ballot newBallot = new Ballot(ballotId, stackScene, voterId, chosenOutcome, reader.GetBoolean(5));
-                ballotList.Add(newBallot);
             }
-        }
-
-        public static Scene FetchScene(MySqlConnection cnn, int id)
-        {
-            cnn.Open();
-            string query = "SELECT * FROM hungergames.scenes where id=" + id + ";";
-            MySqlCommand command = new MySqlCommand(query, cnn);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            reader.Read();
-            int sceneId = reader.GetInt32(0);
-            string name = reader.GetString(1);
-            string desc = reader.GetString(6);
-            cnn.Close();
-
-            List<Requirement> requirements = FetchRequirements(cnn, sceneId);
-            List<Outcome> outcomes = FetchOutcomes(cnn, sceneId);
-            return new Scene(sceneId, name, requirements, outcomes, desc);
-        }
-
-        public static List<Requirement> FetchRequirements(MySqlConnection cnn, int sceneId)
-        {
-            cnn.Open();
-            string query = "SELECT * FROM hungergames.requirements WHERE requirement_scene_id = " + sceneId + ";";
-            MySqlCommand command = new MySqlCommand(query, cnn);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            List<Requirement> requirementsList = new List<Requirement>();
-            while (reader.Read())
-            {
-                Requirement newRequirement = new Requirement(reader.GetInt32(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3));
-                requirementsList.Add(newRequirement);
-            }
-            cnn.Close();
-            return requirementsList;
-        }
-
-        public static List<Outcome> FetchOutcomes(MySqlConnection cnn, int sceneId)
-        {
-            cnn.Open();
-            string query = "SELECT * FROM hungergames.outcomes WHERE outcome_scene_id=" + sceneId + ";";
-            MySqlCommand command = new MySqlCommand(query, cnn);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            List<Outcome> outcomeList = new List<Outcome>();
-            while (reader.Read())
-            {
-                Outcome outcome = new Outcome(reader.GetInt32(0), reader.GetInt32(1), reader.GetInt32(2), reader.GetString(3), reader.GetString(4));
-                outcomeList.Add(outcome);
-            }
-            cnn.Close();
-            return outcomeList;
-        }
-
-        private void addButton_Click(object sender, EventArgs e)
-        {
-            Label newLabel = new Label();
-            newLabel.AutoSize = true;
-            newLabel.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
-            newLabel.TextAlign = ContentAlignment.TopCenter;
-            newLabel.Text = DateTime.Now.ToString("T") + "Here's some more text that will make the message longer. This will help test things out.";
-            logPanel.Controls.Add(newLabel);
+            JsonObject sceneJSON = JsonObject.GetJsonFromRequest("/scenes?id=" + id);
+            Scene newScene = new Scene(sceneJSON);
+            sceneList.Add(newScene);
+            return newScene;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Label newLabel = new Label();
-            newLabel.AutoSize = true;
-            newLabel.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
-            newLabel.TextAlign = ContentAlignment.TopCenter;
-            newLabel.Text = "short";
-            logPanel.Controls.Add(newLabel);
+            RefreshLog();
+            if(!(votingBooth is null))
+            {
+                votingBooth.RefreshBooth();
+            }
         }
 
-        private void AddDescription(StackScene s)
+        private void AddDescription(Performance p)
         {
-            string text = s.flavor;
+            string text = p.flavor;
             if(text == "")
             {
-                text = s.GetDescription() + " " + s.outcome.GetDescription(s);
+                text = p.GetDescription() + " " + p.GetChosenOutcome().GetDescription(p);
             }
 
             Label newLabel = new Label();
@@ -580,7 +215,7 @@ namespace HungerGamesClient
             logPanel.Controls.Add(newLabel);
         }
 
-        private string FormatDescription(StackScene s)
+        /*private string FormatDescription(Performance s)
         {
             string description = s.scene.description;
             for (int role = 1; role <= s.participants.Length; role++)
@@ -594,18 +229,18 @@ namespace HungerGamesClient
 
             return description;
 
-        }
+        }*/
 
-        public static void AddPortraits(StackScene stackScene, FlowLayoutPanel parentPanel)
+        public static void AddPortraits(Performance stackScene, FlowLayoutPanel parentPanel)
         {
-            Character[] participants = stackScene.participants;
+            Actor[] participants = stackScene.participants;
             TableLayoutPanel panel = new TableLayoutPanel();
 
             panel.AutoSize = true;
             panel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             panel.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             panel.ColumnCount = participants.Length;
-            foreach (Character i in participants)
+            foreach (Actor i in participants)
                 panel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F / participants.Length));
             panel.Dock = DockStyle.Top;
             panel.GrowStyle = System.Windows.Forms.TableLayoutPanelGrowStyle.FixedSize;
@@ -617,10 +252,10 @@ namespace HungerGamesClient
 
             for (int i = 0; i < participants.Length; i++)
             {
-                string characterName = participants[i].name;
+                string actorName = participants[i].name;
 
                 PictureBox picture1 = new PictureBox();
-                picture1.Image = Image.FromFile("Images/" + characterName + "_icon.png");
+                picture1.Image = Image.FromFile("Images/" + actorName.ToLower() + "_icon.png");
                 picture1.Anchor = AnchorStyles.Right & AnchorStyles.Left;
                 picture1.Dock = DockStyle.Fill;
                 picture1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -636,6 +271,10 @@ namespace HungerGamesClient
             if (votingBooth is null)
             {
                 votingBooth = new VotingBooth();
+            }
+            else
+            {
+                votingBooth.RefreshBooth();
             }
             votingBooth.Show();
         }
@@ -661,110 +300,17 @@ namespace HungerGamesClient
             Application.Exit();
         }
 
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            if(!(rosterForm is null))
+            {
+                rosterForm.Close();
+            }
+            rosterForm = new RosterForm();
+            rosterForm.Show();
+        }
     }
 
-    public class JsonObject
-    {
-        public Dictionary<string, string> pairings;
-
-        public JsonObject(string body)
-        {
-            pairings = new Dictionary<string, string>();
-
-            char[] characters = body.ToCharArray();
-
-            string[] fieldAndValue = new string[] { "", "" };
-            int fieldAndValueIndex = 0;
-
-            bool inQuote = false;
-
-            for (int i = 0; i < characters.Length; i++)
-            {
-                char c = characters[i];
-                if (inQuote)
-                {
-                    if (c == '\"')
-                    {
-                        inQuote = false;
-                    }
-                    else
-                    {
-                        fieldAndValue[fieldAndValueIndex] += c;
-                    }
-                }
-                else
-                {
-                    switch (c)
-                    {
-                        case '\"':
-                            inQuote = true;
-                            break;
-                        case ':':
-                            fieldAndValueIndex = 1;
-                            break;
-                        case ',':
-                            pairings.Add(fieldAndValue[0], fieldAndValue[1]);
-                            fieldAndValue[0] = "";
-                            fieldAndValue[1] = "";
-                            fieldAndValueIndex = 0;
-                            break;
-                        default:
-                            fieldAndValue[fieldAndValueIndex] += c;
-                            break;
-                    }
-                }
-            }
-        }
-
-        public static JsonObject GetJsonFromRequest(string url)
-        {
-            return null;
-        }
-
-        public static List<JsonObject> GetJsonsFromRequest(string endpoint)
-        {
-            string url = Properties.Settings.Default.api_url + "/user";
-            WebRequest request = WebRequest.Create(url);
-            request.Method = "GET";
-
-            StreamReader responseReader = new StreamReader(request.GetResponse().GetResponseStream());
-            char[] trimChars = new char[] { '[', ']', '{', '}' };
-            string[] responseString = responseReader.ReadLine().Trim(trimChars).Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
-
-            List<JsonObject> result = new List<JsonObject>();
-            foreach (string s in responseString)
-            {
-                result.Add(new JsonObject(s));
-            }
-            return result;
-        }
-
-        public string GetString(string key)
-        {
-            if (!pairings.ContainsKey(key) || pairings[key] == "null")
-            {
-                return "";
-            }
-            return pairings[key];
-        }
-
-        public int GetInt(string key)
-        {
-            if (!pairings.ContainsKey(key) || pairings[key] == "null")
-            {
-                return -1;
-            }
-            return int.Parse(pairings[key]);
-        }
-
-        public bool GetBool(string key)
-        {
-            if (!pairings.ContainsKey(key) || pairings[key] == "null")
-            {
-                return false;
-            }
-            return pairings[key].ToLower() == "true";
-        }
-    }
+    
 
 }

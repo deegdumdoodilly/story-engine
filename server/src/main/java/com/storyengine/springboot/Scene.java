@@ -7,11 +7,15 @@ import javax.persistence.Id;
 
 import com.fasterxml.jackson.databind.JsonSerializable.Base;
 
+import java.util.ArrayList;
+
 @Entity // This tells Hibernate to make a table out of this class
 public class Scene {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
+
+    private Integer parentSceneId;
 
     private String sceneName;
 
@@ -25,15 +29,23 @@ public class Scene {
 
     private String description;
 
+    private String briefDescription;
+
+    private Integer priority;
+
     public Scene(){};
 
-    public Scene(String sceneName, Integer numRequirements, Integer numOutcomes, Integer occurrences, Integer numParticipants, String description) {
+    public Scene(String sceneName, Integer numRequirements, Integer numOutcomes, Integer occurrences, Integer numParticipants, 
+                 String description, String briefDescription, Integer priority, Integer parentSceneId) {
         this.sceneName = sceneName;
         this.numRequirements = numRequirements;
         this.numOutcomes = numOutcomes;
         this.occurrences = occurrences;
         this.numParticipants = numParticipants;
         this.description = description;
+        this.briefDescription = briefDescription;
+        this.priority = priority;
+        this.parentSceneId = parentSceneId;
     }
 
     public void CopyFrom(Scene otherScene){
@@ -44,8 +56,187 @@ public class Scene {
         this.occurrences = otherScene.occurrences;
         this.numParticipants = otherScene.numParticipants;
         this.description = otherScene.description;
+        this.briefDescription = otherScene.briefDescription;
+        this.priority = otherScene.priority;
+        this.parentSceneId = otherScene.parentSceneId;
     }
     
+    public boolean IsSceneSingleplayer(){
+        return getNumParticipants() == 1;
+    }
+
+    public boolean AllRequirementsSatisfied(ArrayList<Auditioner> cast, ArrayList<Requirement> requirementList, Iterable<Status> statusList){
+        for(Requirement req : requirementList){
+          if(req.getSceneId() == getId() && !RequirementSatisfied(req, cast, statusList)){
+            return false;
+          }
+        }
+        return true;
+      }
+    
+      public boolean AllRequirementsSatisfied(Auditioner auditioner, ArrayList<Requirement> requirementList, Iterable<Status> statusList){
+        ArrayList<Auditioner> cast = new ArrayList<Auditioner>();
+        cast.add(auditioner);
+        return AllRequirementsSatisfied(cast, requirementList, statusList);
+      }
+    
+        private static boolean RequirementSatisfied(Requirement requirement, ArrayList<Auditioner> cast, Iterable<Status> statusList){
+        // Tokenize by space
+
+        // Setup
+        String requirementText = requirement.getRequirement();
+        char[] charArray = requirementText.trim().toCharArray();
+
+        // Character reading logic
+        String buffer = "";
+        boolean inQuote = false;
+        boolean escapeNextChar = false;
+
+        // Token reading logic
+        ArrayList<String> firstExpression = new ArrayList<String>();
+        ArrayList<String> secondExpression = new ArrayList<String>();
+        ArrayList<String> currentExpression = firstExpression;
+        String comparator = "";
+        boolean expectingCharacterNumber = false;
+        int characterNumber = -1;
+        boolean expectingCharacterField = false;
+        boolean expectingAte = false;
+
+        for(int i = 0; i < charArray.length; i++){
+            char character = charArray[i];
+            if(escapeNextChar){
+            buffer += character;
+            escapeNextChar = false;
+            }else if(character == '\\'){
+            escapeNextChar = true;
+            }else if(character == '\"'){
+            inQuote = !inQuote;
+            }else if(inQuote || character != ' '){
+            buffer += character;
+            }else if(buffer.length() > 0){
+            // Character was a non-quoted space
+            if(charArray[i-1] == '\"'){
+                // Last expression was in quotes
+                currentExpression.add(buffer);
+            }else if(expectingCharacterNumber){
+                // Buffer should contain a character number
+                try{
+                characterNumber = Integer.parseInt(buffer);
+                }catch(NumberFormatException ex){
+                System.out.println("Could not parse int from " + buffer + ", " + requirementText);
+                return false;
+                }
+                if(characterNumber > cast.size()){
+                System.out.println("No character " + characterNumber + " in this scene, " + requirementText);
+                return false;
+                }
+                expectingCharacterField = true;
+                expectingCharacterNumber = false;
+            }else if(expectingAte){
+                if(!buffer.equals("ate")){
+                System.out.println("Keyword \'last\' should always be followed by \'ate\': " + requirementText);
+                return false;
+                }
+                Actor actor = cast.get(characterNumber - 1).actor;
+                currentExpression.add(actor.getLastAte().toString());
+                expectingAte = false;
+            }
+            }else if(expectingCharacterField){
+            Actor actor = cast.get(characterNumber - 1).actor;
+            // Buffer should contain a character field
+            if(buffer.equals("status")){
+                for(Status status : statusList){
+                if(status.getActorId() == actor.getId()){
+                    currentExpression.add(status.getStatus());
+                }
+                }
+            }else if(buffer.equals("environment")){
+                currentExpression.add(actor.getEnvironment());
+            }else if(buffer.equals("last")){
+                expectingAte = true;
+            }else if(buffer.equals("name")){
+                currentExpression.add(actor.getName());
+            }else{
+                System.out.println("Did not recognize character field \'" + buffer + "\', " + requirementText);
+            }
+            expectingCharacterField = false;
+            }else if(buffer.equals("is") || buffer.equals("not") || buffer.equals("contains") || buffer.equals("greater")|| buffer.equals("less")|| buffer.equals("than")){
+            // Buffer represents an operand
+            if(secondExpression.size() > 0){
+                System.out.println("Error, only one comparator expression permitted: " + requirementText);
+                return false;
+            }
+            comparator += buffer;
+            currentExpression = secondExpression;
+            }else if(buffer.equals("character")){
+            // Buffer indicates the start of a character field
+            expectingCharacterNumber = true;
+            }else if(!buffer.equals("or")){
+            // Buffer contains a literal value. We ignore 'or's and discard them
+            currentExpression.add(buffer);
+            }
+            buffer = "";
+        }
+        if(buffer.length() > 0){
+            currentExpression.add(buffer);
+            buffer = "";
+        }
+
+        // Evaluate expressions
+        boolean truthValue = true;
+        if(comparator.contains("not")){
+            truthValue = false;
+        }
+
+        if(comparator.contains("is")){
+            for(String a : firstExpression){
+            for(String b : secondExpression){
+                if(a.equals(b)){
+                return truthValue;
+                }
+            }
+            }
+            return !truthValue;
+        }else if(comparator.contains("contains")){
+            for(String a : firstExpression){
+            for(String b : secondExpression){
+                if(a.contains(b)){
+                return truthValue;
+                }
+            }
+            }
+            return !truthValue;
+        }else if(comparator.contains("than") || comparator.contains("equals")){
+            int sumA = 0, sumB = 0;
+            for(String a : firstExpression){
+            try{
+                sumA += Integer.parseInt(a);
+            }catch(NumberFormatException ex){
+                System.out.println("In a numerical comparison (greater than or less than), all values must be numbers. " + requirementText);
+            }
+            }
+            for(String b : secondExpression){
+            try{
+                sumB += Integer.parseInt(b);
+            }catch(NumberFormatException ex){
+                System.out.println("In a numerical comparison (greater than or less than), all values must be numbers. " + requirementText);
+            }
+            }
+            if(comparator.contains("greater")){
+            return (sumA > sumB) == truthValue;
+            }else if(comparator.contains("less")){
+            return (sumA < sumB) == truthValue;
+            }else if(comparator.contains("equal")){
+            return (sumA == sumB) == truthValue;
+            }else{
+            System.out.println("No proper comparator expression dectected");
+            return false;
+            }
+        }else{
+            System.out.println("No proper comparator expression dectected");
+            return false;
+        }
+        }
 
     public Integer getId() {
         return this.id;
@@ -87,6 +278,10 @@ public class Scene {
         this.occurrences = occurrences;
     }
 
+    public void incrementOccurrences() {
+        this.occurrences += 1;
+    }
+
     public Integer getNumParticipants() {
         return this.numParticipants;
     }
@@ -102,6 +297,32 @@ public class Scene {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getBriefDescription() {
+        return this.briefDescription;
+    }
+
+    public void setBriefDescription(String briefDescription) {
+        this.briefDescription = briefDescription;
+    }
+
+    public Integer getPriority() {
+        return this.priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+
+    public Integer getParentSceneId() {
+        return this.parentSceneId;
+    }
+
+    public void setParentSceneId(Integer parentSceneId) {
+        this.parentSceneId = parentSceneId;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -129,6 +350,8 @@ public class Scene {
             ", occurrences:" + getOccurrences()  +
             ", numParticipants:" + getNumParticipants()  +
             ", description:'" + getDescription() + "'" +
+            ", briefDescription:" + getBriefDescription()  +
+            ", priority:'" + getPriority() + "'" +
             "}";
     }
 

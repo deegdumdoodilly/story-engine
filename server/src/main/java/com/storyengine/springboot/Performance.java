@@ -23,14 +23,21 @@ public class Performance {
 
     private String participants;
 
+    private Integer time;
+
     public Performance(){};
 
-    public Performance(Integer sceneId, boolean inProgress, Integer winningVote, String flavor, String participants) {
+    public Performance(Integer sceneId, boolean inProgress, Integer winningVote, String flavor, String participants, Integer time) {
         this.sceneId = sceneId;
         this.inProgress = inProgress;
         this.winningVote = winningVote;
         this.flavor = flavor;
         this.participants = participants;
+        this.time = time;
+    }
+
+    public Performance(Integer sceneId, Integer time){
+        this(sceneId, true, -1, "", "", time);
     }
 
     public Integer getId() {
@@ -85,6 +92,24 @@ public class Performance {
         this.participants = participants;
     }
 
+    public void addParticipant(String participant) {
+        this.participants += "," + participant;
+    }
+
+    public Integer getTime() {
+        return this.time;
+    }
+
+    public void setTime(Integer time) {
+        this.time = time;
+    }
+
+    public Performance time(Integer time) {
+        setTime(time);
+        return this;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -110,6 +135,7 @@ public class Performance {
             ", winningVote='" + getWinningVote() + "'" +
             ", flavor='" + getFlavor() + "'" +
             ", participants='" + getParticipants() + "'" +
+            ", time='" + getTime() + "'" +
             "}";
     }
 

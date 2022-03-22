@@ -2,7 +2,9 @@ package com.storyengine.springboot;
 
 import com.storyengine.springboot.User;
 
+import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,289 +13,321 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import org.springframework.web.server.ResponseStatusException;
+
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 
 @RestController 
 @RequestMapping(path="/api") // This means URL's start with /api (after Application path)
 public class MainController {
-  @Autowired 
+  @Autowired
+  private TimeRepository timeRepository;
+  @Autowired
+  private SceneRepository sceneRepository;
+  @Autowired
+  private UserRepository userRepository;
+  @Autowired
+  private PerformanceRepository performanceRepository;
+  @Autowired
+  private VoteRepository voteRepository;
+  @Autowired
+  private StatusRepository statusRepository;
+  @Autowired
   private ActorRepository actorRepository;
   @Autowired
   private OutcomeRepository outcomeRepository;
   @Autowired
-  private PerformanceRepository performanceRepository;
-  @Autowired
   private RequirementRepository requirementRepository;
-  @Autowired
-  private SceneRepository sceneRepository;
-  @Autowired
-  private StatusRepository statusRepository;
-  @Autowired 
-  private UserRepository userRepository;
-  @Autowired
-  private VoteRepository voteRepository;
 
-  @PostMapping(path="/user/add") // Map ONLY POST Requests
-  public @ResponseBody String addNewUser (@RequestParam(required = false) String username
-      , @RequestParam(required = false) String passhash
-      , @RequestParam(required = false) Integer votingChances
-      , @RequestParam(required = false) Integer positiveVotes
-      , @RequestParam(required = false) Integer neutralVotes
-      , @RequestParam(required = false) Integer negativeVotes
-      , @RequestParam(required = false) Boolean validVoter) {
-    User n = new User(username,passhash,votingChances, positiveVotes, neutralVotes, negativeVotes, validVoter);
-    userRepository.save(n);
-    return "Saved";
+
+  // Get Mappings
+
+  @GetMapping(path="/time")
+  public @ResponseBody Integer GetTime() {
+    return timeRepository.findById(1).get().getTime();
   }
+
 
   // Post Mappings
 
-  @PostMapping(path="/vote") 
-  public @ResponseBody Vote AddNewVote (@RequestBody Vote newVote) {
-    return voteRepository.save(newVote);
+  @PostMapping(path="/time/advance")
+  public @ResponseBody String advanceTime() {
+    Time t = timeRepository.findById(1).get();
+    t.setTime(t.getTime() + 1);
+    timeRepository.save(t);
+    return "Time advanced";
   }
 
-  @PostMapping(path="/vote/clear") 
-  public @ResponseBody String ClearVotes () {
-    voteRepository.deleteAll();
-    return "Votes cleared.";
+  @PostMapping(path="/time/reset")
+  public @ResponseBody String resetTime() {
+    Time t = timeRepository.findById(1).get();
+    t.setTime(0);
+    timeRepository.save(t);
+    return "Time reset";
   }
 
-  @PostMapping(path="/vote/in-progress") 
-  public @ResponseBody Vote SetVoteInProgress (@RequestParam(required = false) Integer id, @RequestParam Boolean inProgress) {
-    if(id == null){
-      for(Vote vote : voteRepository.findAll()){
-        vote.setInProgress(inProgress);
-      }
-      return null;
-    }else{
-      if(voteRepository.existsById(id)){
-        voteRepository.findById(id).get().setInProgress(inProgress);
-        return voteRepository.findById(id).get();
-      }else{
-        return null;
-      }
-    }
-  }
-
-  @PostMapping(path="/actor") 
-  public @ResponseBody Actor AddNewActor (@RequestBody Actor newActor) {
-    return actorRepository.save(newActor);
-  }
-
-  @PostMapping(path="/actor/{id}/set-environment") 
-  public @ResponseBody Actor SetEnvironment (@PathVariable("id") Integer id, @RequestParam String environment) {
-    if(actorRepository.existsById(id)){
-      Actor actor = actorRepository.findById(id).get();
-      actor.setEnvironment(environment);
-      return actor;
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/status") 
-  public @ResponseBody Status AddNewStatus (@RequestBody Status newStatus) {
-    return statusRepository.save(newStatus);
-  }
-
-  @PostMapping(path="/performance") 
-  public @ResponseBody Performance AddNewPerformance (@RequestBody Performance newPerformance) {
-    System.out.println(newPerformance.toString());
-    return performanceRepository.save(newPerformance);
-  }
-
-  @PostMapping(path="/performance/clear") 
-  public @ResponseBody String ClearPerformances () {
-    performanceRepository.deleteAll();
-    return "Performances cleared.";
-  }
-
-  @PostMapping(path="/performance/{id}/set-winning-vote") 
-  public @ResponseBody Performance SetWinningVote (@PathVariable("id") Integer id, @RequestParam Integer voteId) {
-    if(performanceRepository.existsById(id)){
-      Performance performance = performanceRepository.findById(id).get();
-      performance.setWinningVote(voteId);
-      return performance;
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/performance/in-progress") 
-  public @ResponseBody Performance SetPerformanceInProgress (@RequestParam(required = false) Integer id, @RequestParam Boolean inProgress) {
-    if(id == null){
-      for(Performance performance : performanceRepository.findAll()){
-        performance.setInProgress(inProgress);
-      }
-      return null;
-    }else{
-      if(performanceRepository.existsById(id)){
-        performanceRepository.findById(id).get().setInProgress(inProgress);
-        return performanceRepository.findById(id).get();
-      }else{
-        return null;
-      }
-    }
-  }
-
-  @PostMapping(path="/scene/reset") 
-  public @ResponseBody String ResetSceneOccurrences () {
+  @PostMapping(path="/simulation/reset")
+  public @ResponseBody String ResetSimulation(){
     for(Scene s : sceneRepository.findAll()){
       s.setOccurrences(0);
+      sceneRepository.save(s);
     }
-    return "Occurrence count reset.";
-  }
-
-  @PostMapping(path="/scene") 
-  public @ResponseBody Scene AddNewScene (@RequestBody Scene newScene) {
-    if(sceneRepository.existsById(newScene.getId())){
-      sceneRepository.findById(newScene.getId()).get().CopyFrom(newScene);
-      return newScene;
-    }else{
-      return sceneRepository.save(newScene);
-    }
-  }
-
-  @PostMapping(path="/scene/{id}/set-occurrences") 
-  public @ResponseBody Scene AddNewScene (@PathVariable("id") Integer id, @RequestParam Integer occurrences) {
-    if(sceneRepository.existsById(id)){
-      Scene scene = sceneRepository.findById(id).get();
-      scene.setOccurrences(occurrences);
-      return scene;
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/{id}/set-voting-chances") 
-  public @ResponseBody User SetVotingChances (@PathVariable("id") Integer id, @RequestParam Integer votingChances) {
-    if(userRepository.existsById(id)){
-      userRepository.findById(id).get().setVotingChances(votingChances);
-      return userRepository.findById(id).get();
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/{id}/set-positive-votes") 
-  public @ResponseBody User SetPositiveVotes (@PathVariable("id") Integer id, @RequestParam Integer numVotes) {
-    if(userRepository.existsById(id)){
-      userRepository.findById(id).get().setPositiveVotes(numVotes);
-      return userRepository.findById(id).get();
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/{id}/set-negative-votes") 
-  public @ResponseBody User SetNegativeVotes (@PathVariable("id") Integer id, @RequestParam Integer numVotes) {
-    if(userRepository.existsById(id)){
-      userRepository.findById(id).get().setNegativeVotes(numVotes);
-      return userRepository.findById(id).get();
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/{id}/set-neutral-votes") 
-  public @ResponseBody User SetNeutralVotes (@PathVariable("id") Integer id, @RequestParam Integer numVotes) {
-    if(userRepository.existsById(id)){
-      userRepository.findById(id).get().setNeutralVotes(numVotes);
-      return userRepository.findById(id).get();
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/{id}/modify-positive-votes") 
-  public @ResponseBody User ModifyPositiveVotes (@PathVariable("id") Integer id, @RequestParam Integer modification) {
-    if(userRepository.existsById(id)){
-      User user = userRepository.findById(id).get();
-      user.setPositiveVotes(user.getPositiveVotes() + modification);
-      return user;
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/{id}/modify-negative-votes") 
-  public @ResponseBody User ModifyNegativeVotes (@PathVariable("id") Integer id, @RequestParam Integer modification) {
-    if(userRepository.existsById(id)){
-      User user = userRepository.findById(id).get();
-      user.setNegativeVotes(user.getNegativeVotes() + modification);
-      return user;
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/{id}/modify-neutral-votes") 
-  public @ResponseBody User ModifyNeutralVotes (@PathVariable("id") Integer id, @RequestParam Integer modification) {
-    if(userRepository.existsById(id)){
-      User user = userRepository.findById(id).get();
-      user.setNeutralVotes(user.getNeutralVotes() + modification);
-      return user;
-    }else{
-      return null;
-    }
-  }
-
-  @PostMapping(path="/user/reset") 
-  public @ResponseBody String ResetUserVotes () {
     for(User u : userRepository.findAll()){
       u.setVotingChances(0);
       u.setPositiveVotes(0);
       u.setNeutralVotes(0);
       u.setNegativeVotes(0);
+      userRepository.save(u);
     }
-    return "Occurrence count reset.";
+    for(Actor a : actorRepository.findAll()){
+      a.setEnvironment("Woods");
+      actorRepository.save(a);
+    }
+    Time t = timeRepository.findById(1).get();
+    t.setTime(0);
+    timeRepository.save(t);
+    
+    performanceRepository.deleteAll();
+    voteRepository.deleteAll();
+    statusRepository.deleteAll();
+
+    
+    System.out.println("Simulation reset\n\n");
+    return "Simulation reset";
   }
 
-  // Get Mappings
+  @PostMapping(path="/simulation/assign-performances")
+  public @ResponseBody Iterable<Performance> AssignPerformances(@RequestParam(required = false) Integer seed, @RequestParam(required = false) Integer votesPerPerformance){
+    if(seed == null)
+      seed = 88273;
 
-  @GetMapping(path="/actor")
-  public @ResponseBody Iterable<Actor> getAllActors() {
-    return actorRepository.findAll();
-  }
+    if(votesPerPerformance == null)
+      votesPerPerformance = 1;
+    Random randomNumberGenerator = new Random(seed);
 
-  @GetMapping(path="/outcome")
-  public @ResponseBody Iterable<Outcome> getAllOutcomes() {
-    return outcomeRepository.findAll();
-  }
+    // Will store the final set of new performances
+    ArrayList<Performance> performanceStack = new ArrayList<Performance>();
 
-  @GetMapping(path="/performance")
-  public @ResponseBody Iterable<Performance> getAllPerformances() {
-    return performanceRepository.findAll();
-  }
+    // Get a list of all actors and shuffle
+    System.out.println("Assembling auditioners...\n\n");
+    ArrayList<Auditioner> auditioners = new ArrayList<Auditioner>(); 
+    for(Actor a : actorRepository.findAll()){
+      Auditioner newAuditioner = new Auditioner(a);
+      auditioners.add(newAuditioner);
+    }
+    Collections.shuffle(auditioners, randomNumberGenerator);
 
-  @GetMapping(path="/requirement")
-  public @ResponseBody Iterable<Requirement> getAllRequirements() {
-    return requirementRepository.findAll();
-  }
+    // Get a list of all requirements for later
+    ArrayList<Requirement> requirementList = new ArrayList<Requirement>();
+    for(Requirement req : requirementRepository.findAll()){
+      requirementList.add(req);
+    }
 
-  @GetMapping(path="/scene")
-  public @ResponseBody Iterable<Scene> getAllScenes() {
-    return sceneRepository.findAll();
-  }
+    // For each auditioner:
+    // - For each scene:
+    //   - If the scene is singleplayer and we meet the requirements, add it as a possible Role.
+    //   - If the scene is multiplayer, check every permutation of auditioners in other roles. If any meet the requirements, add them as possible Roles to all involved auditioners.
+    // - Filter out all but the highest priority roles
 
-  @GetMapping(path="/status")
-  public @ResponseBody Iterable<Status> getAllStatuses() {
-    return statusRepository.findAll();
-  }
+    // For each auditioner (in order of who has the highest priority roles):
+    // Filter out all higher frequency events
+    // Filter out all less complex events
+    // - if it's multiplayer, make sure all associated Auditioners get signed off on that event too
+    System.out.println("Assembling all possible roles...\n\n");
+    Iterable<Status> statusList = statusRepository.findAll();
+    for(Auditioner auditioner : auditioners){
+      for(Scene scene : sceneRepository.findAll()){
+        if(scene.IsSceneSingleplayer()){
+          if(scene.AllRequirementsSatisfied(auditioner, requirementList, statusList)){
+            auditioner.roles.add(new Role(auditioner, scene, 1));
+          }
+        }else{
+          auditioner.AddRolePermutations(scene, auditioners, requirementList, statusList);
+        }
+      }
+    }
 
-  @GetMapping(path="/user")
-  public @ResponseBody Iterable<User> getAllUsers() {
-    return userRepository.findAll();
-  }
+    // for(Auditioner auditioner : auditioners)
+    //   System.out.println(auditioner.toString());
 
-  @RequestMapping(path="/user/{id}")
-  public @ResponseBody User getUser(@PathVariable("id") Integer id) {
-    return userRepository.findById(id).get();
-  }
+    System.out.println("Filtering by priority...\n\n");
+    // Filter by priority
+    for(Auditioner auditioner : auditioners){
+      for(Role role : auditioner.roles){
+        auditioner.highestPriority = Integer.max(auditioner.highestPriority, role.scene.getPriority());
+      }
 
-  @GetMapping(path="/vote")
-  public @ResponseBody Iterable<Vote> getAllVotes() {
-    return voteRepository.findAll();
+      for(int roleIndex = 0; roleIndex < auditioner.roles.size(); roleIndex ++){
+        Role role = auditioner.roles.get(roleIndex);
+        if(role.scene.getPriority() < auditioner.highestPriority){
+          roleIndex -= role.Delete();
+        }
+      }
+    }
+
+    Collections.sort(auditioners);
+
+    
+    // for(Auditioner auditioner : auditioners)
+    //   System.out.println(auditioner.toString());
+    
+    System.out.println("Filtering by frequency...\n\n");
+    // Filter out all higher frequency events
+    for(Auditioner auditioner : auditioners){
+      for(Role role : auditioner.roles){
+        auditioner.lowestFrequency = Integer.min(auditioner.lowestFrequency, role.scene.getOccurrences());
+      }
+
+      for(int roleIndex = 0; roleIndex < auditioner.roles.size(); roleIndex ++){
+        Role role = auditioner.roles.get(roleIndex);
+        if(role.scene.getOccurrences() > auditioner.lowestFrequency){
+          roleIndex -= role.Delete();
+        }
+      }
+    }
+
+    
+    // for(Auditioner auditioner : auditioners)
+    //   System.out.println(auditioner.toString());
+    System.out.println("Filtering parent scenes...\n\n");
+    // Filter out all parent scenes
+    for(Auditioner auditioner : auditioners){
+      auditioner.parentSceneIds = new ArrayList<Integer>();
+      for(Role role : auditioner.roles){
+        Integer parentSceneId = role.scene.getParentSceneId();
+        if(parentSceneId != null){
+          auditioner.parentSceneIds.add(parentSceneId);
+        }
+      }
+
+      for(int roleIndex = 0; roleIndex < auditioner.roles.size(); roleIndex ++){
+        Role role = auditioner.roles.get(roleIndex);
+        if(auditioner.parentSceneIds.contains(role.scene.getId())){
+          roleIndex -= role.DeleteLineage(0, false);
+        }
+      }
+    }
+
+    Collections.sort(auditioners);
+
+    // for(Auditioner auditioner : auditioners)
+    //   System.out.println(auditioner.toString());
+    System.out.println("Selecting roles...\n\n");
+    // Assign random roles to performances
+    randomNumberGenerator = new Random(seed);
+    ArrayList<Auditioner> unscheduledAuditioners = (ArrayList<Auditioner>) auditioners.clone();
+    for(int auditionerIndex = 0; auditionerIndex < unscheduledAuditioners.size(); auditionerIndex++){
+      Auditioner auditioner = unscheduledAuditioners.get(auditionerIndex);
+      ArrayList<ArrayList<Role>> uniqueRoles = new ArrayList<ArrayList<Role>>();
+      for(Role role : auditioner.roles){
+        boolean foundMatch = false;
+        for(ArrayList<Role> existingRoleArray : uniqueRoles){
+          if(existingRoleArray.get(0).scene.getId() == role.scene.getId()){
+            existingRoleArray.add(role);
+            foundMatch = true;
+            continue;
+          }
+        }
+        if(!foundMatch){
+          ArrayList<Role> newList = new ArrayList<Role>();
+          newList.add(role);
+          uniqueRoles.add(newList);
+        }
+      }
+      int index = randomNumberGenerator.nextInt(uniqueRoles.size());
+      ArrayList<Role> chosenRoleList = uniqueRoles.get(index);
+      index = randomNumberGenerator.nextInt(chosenRoleList.size());
+      Role chosenRole = chosenRoleList.get(index);
+      int[] participantIds = new int[chosenRole.scene.getNumParticipants()];
+
+      chosenRole.scene.incrementOccurrences();
+      sceneRepository.save(chosenRole.scene);
+
+      ArrayList<Role> finalizedAuditioners;
+      if(chosenRole.associatedRoles != null){
+        for(int associatedRoleIndex = 0; associatedRoleIndex < chosenRole.associatedRoles.size(); associatedRoleIndex ++){
+          Role associatedRole = chosenRole.associatedRoles.get(associatedRoleIndex);
+
+          participantIds[associatedRole.roleNumber - 1] = associatedRole.auditioner.actor.getId();
+
+          if(associatedRole.auditioner != auditioner){
+            if(unscheduledAuditioners.indexOf(associatedRole.auditioner) < auditionerIndex){
+              auditionerIndex--;
+            }
+            unscheduledAuditioners.remove(associatedRole.auditioner);
+          }
+        }
+        chosenRole.Delete();
+
+        finalizedAuditioners = chosenRole.associatedRoles;
+      }else{
+        participantIds[0] = auditioner.actor.getId();
+        finalizedAuditioners = new ArrayList<Role>();
+        finalizedAuditioners.add(chosenRole);
+      }
+
+      // Delete occurences of this auditioner from other roles
+      for(Auditioner otherAuditioner : auditioners){
+        for(int roleIndex = 0; roleIndex < otherAuditioner.roles.size(); roleIndex++){
+          Role role = otherAuditioner.roles.get(roleIndex);
+          if(role.associatedRoles != null){
+            for(Role associatedRole : role.associatedRoles){
+              for(Role occupiedAuditioner : finalizedAuditioners){
+                if(associatedRole.auditioner == occupiedAuditioner.auditioner){
+                  roleIndex -= role.Delete();
+                }
+              }
+            }
+          }
+        }
+      }
+
+      Performance newPerformance = new Performance(chosenRole.scene.getId(), GetTime());
+      newPerformance.setParticipants("" + participantIds[0]);
+
+      for(int i = 1; i < participantIds.length; i++){
+        newPerformance.addParticipant("" + participantIds[i]);
+      }
+      newPerformance = performanceRepository.save(newPerformance);
+      performanceStack.add(newPerformance);
+    }
+
+
+    System.out.println("Distributing votes...\n\n");
+
+    ArrayList<User> users = new ArrayList<User>();
+    for(User user : userRepository.findAll()){
+      users.add(user);
+    }
+
+    Collections.shuffle(users, randomNumberGenerator);
+
+    for(Performance performance : performanceStack){
+      for(int i = 0; i < votesPerPerformance; i++){
+        User nextVoter = users.get(0);
+        for(User user : users){
+          if(user.getVotingChances() < nextVoter.getVotingChances()){
+            nextVoter = user;
+          }
+        }
+        //public Vote(Integer performanceId, Integer voterId, Integer chosenOutcomeId, boolean inProgress, boolean hasChosenOutcome) {
+        Vote newVote = new Vote(performance.getId(), nextVoter.getId(), -1, true, false);
+        nextVoter.incrementVotingChances();
+
+        voteRepository.save(newVote);
+        userRepository.save(nextVoter);
+      }
+    }
+
+    // for(Auditioner auditioner : auditioners)
+    //   System.out.println(auditioner.toString());
+    System.out.println("Done\n\n");
+    return performanceStack;
   }
 }
