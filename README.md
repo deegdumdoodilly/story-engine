@@ -1,4 +1,4 @@
-## Explanation of requests
+# Explanation of requests
 
 Two types of relevant requests in this application. **GET** requests generally retrieve information, while **POST** requests 
 push information to the server.. If you're getting a weird error, it's usually worth checking to see if it was caused 
@@ -299,4 +299,7 @@ Update the 'chosenOutcome' field of a specified vote, which determines what outc
 *body:*
 A text representation of the desired outcome's id
 
+
+## Simulation Endpoints
+The following endpoints control the simulation itself, instead of being associated with specific objects:
 
