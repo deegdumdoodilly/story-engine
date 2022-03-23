@@ -1,4 +1,4 @@
-## Explanation of requests
+# Explanation of requests
 
 Two types of relevant requests in this application. **GET** requests generally retrieve information, while **POST** requests 
 push information to the server.. If you're getting a weird error, it's usually worth checking to see if it was caused 
@@ -300,3 +300,17 @@ Update the 'chosenOutcome' field of a specified vote, which determines what outc
 A text representation of the desired outcome's id
 
 
+## Simulation Endpoints
+The POST endpoints control the simulation itself, instead of being associated with specific objects:
+
+#### /simulation/reset
+
+Resets all data relevant to this iteration of the simulation. This includes scene occurrence rates, users' voting history, actor's environment, the list of performances, the list of votes, the list of statuses, and the current time.
+
+#### /simulation/assign-performances
+
+Creates new performances for all characters in the simulation and saves them to the database. Also assigns voting ballots to users to determine their outcomes.
+
+*params*
+* seed: a value to initialize the random number generator with. Will use the same default value every time if none is provided.
+* votesPerPerformance: how many votes to hand out per performance, i.e., how many people will be voting to determine the outcome of any given performance.
