@@ -78,7 +78,7 @@ public class Actor {
     @Override
     public String toString() {
         return "{" +
-            " id:\"" + getId() + "\"" +
+            ", id:\"" + getId() + "\"" +
             " name:\"" + getName() + "\"" +
             ", lastAte:\"" + getLastAte() + "\"" +
             ", environment:\"" + getEnvironment() + "\"" +

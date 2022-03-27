@@ -25,7 +25,7 @@ namespace HungerGamesClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("deeg")]
         public string username {
             get {
                 return ((string)(this["username"]));

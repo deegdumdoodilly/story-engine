@@ -70,6 +70,26 @@ namespace HungerGamesClient
             flavor = json.GetString("flavor");
         }
 
+        public string toJSON()
+        {
+            string time = JsonObject.GetStringFromRequest("/time");
+
+            string participantString = "";
+            foreach (Actor a in participants)
+                participantString += a.id + ",";
+            participantString.Trim(',');
+
+            return "{"
+                + "\"id\": \"" + id + "\","
+                + "\"sceneId\": \"" + scene.sceneId + "\","
+                + "\"inProgress\": \"" + inProgress.ToString() + "\","
+                + "\"winningVote\": \"" + winningVoteId + "\","
+                + "\"flavor\": \"" + flavor + "\","
+                + "\"participants\": \"" + participantString + "\","
+                + "\"time\": \"" + time + "\""
+                + "}";
+        }
+
         public string ToMySQLString()
         {
             string participantString = "";

@@ -39,7 +39,7 @@ public class Role{
     // Deletes this role and all ancestors from all associated auditioners
     // Returns the number of roles removed from this auditioner
     public int DeleteLineage(int deletions, boolean ignoreAssociations){
-      if(scene.getId() == scene.getParentSceneId()){
+      if(scene.getId().intValue() == scene.getParentSceneId()){
         System.out.print("Error, recursive scene parent loop");
         return 0;
       }
@@ -57,7 +57,7 @@ public class Role{
 
       for(int roleIndex = 0; roleIndex < auditioner.roles.size(); roleIndex++){
         Role possibleAncestor = auditioner.roles.get(roleIndex);
-        if(scene.getParentSceneId() == possibleAncestor.scene.getId()){
+        if(scene.getParentSceneId().intValue() == possibleAncestor.scene.getId().intValue()){
           deletions += possibleAncestor.DeleteLineage(deletions, false);
           roleIndex -= 1;
         }

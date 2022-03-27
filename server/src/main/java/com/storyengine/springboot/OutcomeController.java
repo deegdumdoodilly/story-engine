@@ -32,7 +32,7 @@ public class OutcomeController {
         Iterable<Outcome> allOutcomes = outcomeRepository.findAll();
         ArrayList<Outcome> result = new ArrayList<Outcome>();
         for(Outcome o : allOutcomes){
-          if(o.getSceneId() == sceneId){
+          if(o.getSceneId().intValue() == sceneId){
             result.add(o);
           }
         }
@@ -46,6 +46,12 @@ public class OutcomeController {
       result.add(outcomeRepository.findById(id).get());
       return result;
     }
+  }
+
+  @PostMapping(path="/validate")
+  public @ResponseBody Outcome ValidateOutcome (@RequestBody Outcome newOutcome) {
+    System.out.println(newOutcome.toString());
+    return newOutcome;
   }
 
   @PostMapping(path="/add") 
@@ -65,7 +71,7 @@ public class OutcomeController {
         return "Outcomes removed.";
       }else{
         for (Outcome o : outcomeRepository.findAll()) {
-          if(o.getSceneId() == sceneId){
+          if(o.getSceneId().intValue() == sceneId){
             System.out.println("Deleting Outcome ID: " + o.getId());
             outcomeRepository.delete(o);
           }

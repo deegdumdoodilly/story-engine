@@ -41,6 +41,8 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.loginLabel = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.editScenesButton = new System.Windows.Forms.Button();
+            this.editSimButton = new System.Windows.Forms.Button();
             this.logPanel.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -200,11 +202,37 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // editScenesButton
+            // 
+            this.editScenesButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.editScenesButton.Font = new System.Drawing.Font("Baskerville Old Face", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.editScenesButton.Location = new System.Drawing.Point(663, 15);
+            this.editScenesButton.Name = "editScenesButton";
+            this.editScenesButton.Size = new System.Drawing.Size(82, 52);
+            this.editScenesButton.TabIndex = 24;
+            this.editScenesButton.Text = "Manage Scenes";
+            this.editScenesButton.UseVisualStyleBackColor = true;
+            this.editScenesButton.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // editSimButton
+            // 
+            this.editSimButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.editSimButton.Font = new System.Drawing.Font("Baskerville Old Face", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.editSimButton.Location = new System.Drawing.Point(576, 15);
+            this.editSimButton.Name = "editSimButton";
+            this.editSimButton.Size = new System.Drawing.Size(81, 52);
+            this.editSimButton.TabIndex = 25;
+            this.editSimButton.Text = "Manage Game";
+            this.editSimButton.UseVisualStyleBackColor = true;
+            this.editSimButton.Click += new System.EventHandler(this.editSimButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 564);
+            this.Controls.Add(this.editSimButton);
+            this.Controls.Add(this.editScenesButton);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.loginLabel);
             this.Controls.Add(this.flowLayoutPanel1);
@@ -238,6 +266,8 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Label loginLabel;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button editScenesButton;
+        private System.Windows.Forms.Button editSimButton;
     }
 }
 

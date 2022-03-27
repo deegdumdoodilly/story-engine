@@ -118,7 +118,7 @@ namespace HungerGamesClient
                 checkboxList[i].Item1.Checked = false;
                 checkboxList[i].Item2.Visible = false;
                 checkboxList[i].Item2.Text = "";
-                checkboxOutcomes[i] = new Outcome();
+                checkboxOutcomes[i] = new Outcome(-1, -1, 0, "", "MISSING OUTCOME");
             }
             
 

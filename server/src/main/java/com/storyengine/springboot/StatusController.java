@@ -32,7 +32,7 @@ public class StatusController {
         Iterable<Status> allStatuses = statusRepository.findAll();
         ArrayList<Status> result = new ArrayList<Status>();
         for(Status s : allStatuses){
-          if(s.getActorId() == actorId){
+          if(s.getActorId().intValue() == actorId){
             result.add(s);
           }
         }

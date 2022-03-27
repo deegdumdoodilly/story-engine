@@ -53,6 +53,11 @@ public class MainController {
     return timeRepository.findById(1).get().getTime();
   }
 
+  @GetMapping(path="/health")
+  public @ResponseBody String GetHealth() {
+    return "{\"status\":\"UP\"}";
+  }
+
 
   // Post Mappings
 
@@ -104,12 +109,16 @@ public class MainController {
 
   @PostMapping(path="/simulation/assign-performances")
   public @ResponseBody Iterable<Performance> AssignPerformances(@RequestParam(required = false) Integer seed, @RequestParam(required = false) Integer votesPerPerformance){
-    if(seed == null)
-      seed = 88273;
+    Random randomNumberGenerator;
+    if(seed == null){
+      randomNumberGenerator = new Random();
+    }else{
+      randomNumberGenerator = new Random(seed);
+    }
 
     if(votesPerPerformance == null)
       votesPerPerformance = 1;
-    Random randomNumberGenerator = new Random(seed);
+    
 
     // Will store the final set of new performances
     ArrayList<Performance> performanceStack = new ArrayList<Performance>();
@@ -144,11 +153,11 @@ public class MainController {
     for(Auditioner auditioner : auditioners){
       for(Scene scene : sceneRepository.findAll()){
         if(scene.IsSceneSingleplayer()){
-          if(scene.AllRequirementsSatisfied(auditioner, requirementList, statusList)){
+          if(scene.AllRequirementsSatisfied(auditioner, requirementList, statusList, GetTime())){
             auditioner.roles.add(new Role(auditioner, scene, 1));
           }
         }else{
-          auditioner.AddRolePermutations(scene, auditioners, requirementList, statusList);
+          auditioner.AddRolePermutations(scene, auditioners, requirementList, statusList, GetTime());
         }
       }
     }
@@ -228,7 +237,7 @@ public class MainController {
       for(Role role : auditioner.roles){
         boolean foundMatch = false;
         for(ArrayList<Role> existingRoleArray : uniqueRoles){
-          if(existingRoleArray.get(0).scene.getId() == role.scene.getId()){
+          if(existingRoleArray.get(0).scene.getId().intValue() == role.scene.getId().intValue()){
             existingRoleArray.add(role);
             foundMatch = true;
             continue;
@@ -329,5 +338,13 @@ public class MainController {
     //   System.out.println(auditioner.toString());
     System.out.println("Done\n\n");
     return performanceStack;
+  }
+
+  @PostMapping(path="/simulation/test-requirement")
+  public @ResponseBody Boolean TestRequirement(@RequestParam Integer actorId, @RequestParam Integer requirementId){
+    Requirement r = requirementRepository.findById(requirementId).get();
+    ArrayList<Auditioner> cast = new ArrayList<Auditioner>();
+    cast.add(new Auditioner(actorRepository.findById(actorId).get()));
+    return Scene.RequirementSatisfied(r, cast, statusRepository.findAll(), (int) GetTime());
   }
 }

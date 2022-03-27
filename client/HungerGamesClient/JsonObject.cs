@@ -65,6 +65,7 @@ namespace HungerGamesClient
             WebRequest request = WebRequest.Create(url);
             request.Method = "GET";
 
+
             StreamReader responseReader = new StreamReader(request.GetResponse().GetResponseStream());
             char[] trimChars = new char[] { '[', ']', '{', '}' };
             string responseString = responseReader.ReadLine().Trim(trimChars);
@@ -96,14 +97,14 @@ namespace HungerGamesClient
             List<JsonObject> result = new List<JsonObject>();
             foreach (string s in responseString)
             {
-                result.Add(new JsonObject(s));
+                result.Add(new JsonObject(s.Replace("\\\"", "\"")));
             }
             return result;
         }
 
         public static JsonObject PostWithJson(string endpoint, string json)
         {
-            string url = Properties.Settings.Default.api_url + "/" + endpoint;
+            string url = Properties.Settings.Default.api_url + endpoint;
             WebRequest request = WebRequest.Create(url);
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -114,9 +115,28 @@ namespace HungerGamesClient
             }
 
             Stream stream = request.GetResponse().GetResponseStream();
+
+            char[] trimChars = new char[] { '[', ']', '{', '}' };
             using (StreamReader reader = new StreamReader(stream))
             {
-                return new JsonObject(reader.ReadToEnd());
+                string response = reader.ReadToEnd().Trim(trimChars);
+                return new JsonObject(response);
+            }
+
+        }
+
+        public static JsonObject Post(string endpoint)
+        {
+            string url = Properties.Settings.Default.api_url + endpoint;
+            WebRequest request = WebRequest.Create(url);
+            request.Method = "POST";
+
+            Stream stream = request.GetResponse().GetResponseStream();
+            char[] trimChars = new char[] { '[', ']', '{', '}' };
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string response = reader.ReadToEnd().Trim(trimChars);
+                return new JsonObject(response);
             }
         }
 
@@ -135,6 +155,7 @@ namespace HungerGamesClient
             {
                 return -1;
             }
+            string val = pairings[key];
             return int.Parse(pairings[key]);
         }
 

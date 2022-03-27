@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Hosting;
+using System.Net;
 
 namespace HungerGamesClient
 {
@@ -23,19 +24,45 @@ namespace HungerGamesClient
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            if (Properties.Settings.Default.db_name.Length == 0)
+            bool establishedConnection = false;
+
+            if (Properties.Settings.Default.api_url.Length == 0)
             {
-                SetDBName dbName = new SetDBName();
-                dbName.ShowDialog();
+                SetURL setURL = new SetURL();
+                setURL.ShowDialog();
+            }
+
+            while (!establishedConnection)
+            {
+                try
+                {
+                    JsonObject.GetJsonFromRequest("/health");
+                    establishedConnection = true;
+                }
+                catch(Exception e)
+                {
+                    MessageBox.Show("Error, unable to connect at \"" + Properties.Settings.Default.api_url + "\". " + e.Message);
+                    SetURL setURL = new SetURL();
+                    setURL.ShowDialog();
+                }
             }
 
             string passhash = "";
-            User user = new User();
+            User user;
 
             string storedUsername = Properties.Settings.Default.username;
             string storedPassword = Properties.Settings.Default.password;
             if (storedUsername.Length > 0)
             {
+                try
+                {
+                    JsonObject userJson = JsonObject.GetJsonFromRequest("/users?username=" + storedUsername);
+                    user = new User(userJson);
+                }
+                catch
+                {
+                    user = new User();
+                }
                 passhash = user.passhash;
                 if (user.username is null)
                 {
@@ -51,6 +78,7 @@ namespace HungerGamesClient
                     {
                         // No password required, login successful
                         MainForm.currentUser = user;
+                        UserLogin.FetchUsers();
                         Application.Run(new MainForm());
                     }
                     else if(storedPassword.Length == 0)

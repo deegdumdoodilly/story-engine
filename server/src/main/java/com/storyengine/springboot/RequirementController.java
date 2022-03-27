@@ -32,7 +32,7 @@ public class RequirementController {
         Iterable<Requirement> allRequirements = requirementRepository.findAll();
         ArrayList<Requirement> result = new ArrayList<Requirement>();
         for(Requirement o : allRequirements){
-          if(o.getSceneId() == sceneId){
+          if(o.getSceneId().intValue() == sceneId){
             result.add(o);
           }
         }
@@ -46,6 +46,12 @@ public class RequirementController {
       result.add(requirementRepository.findById(id).get());
       return result;
     }
+  }
+
+  @PostMapping(path="/validate") 
+  public @ResponseBody Requirement ValidateRequirement (@RequestBody Requirement newRequirement) {
+    System.out.println(newRequirement.toString());
+    return newRequirement;
   }
 
   @PostMapping(path="/add") 
@@ -64,9 +70,11 @@ public class RequirementController {
         }
         return "Requirements removed.";
       }else{
-        for (Requirement p : requirementRepository.findAll()) {
-          System.out.println("Deleting Requirement ID: " + p.getId());
-          requirementRepository.delete(p);
+        for (Requirement r : requirementRepository.findAll()) {
+          if(r.getSceneId().intValue() == sceneId){
+            System.out.println("Deleting Requirement ID: " + r.getId());
+            requirementRepository.delete(r);
+          }
         }
         return "Requirements removed.";
       }

@@ -23,7 +23,15 @@ public class PerformanceController {
   @Autowired
   private PerformanceRepository performanceRepository;
   @Autowired
+  private RequirementRepository requirementRepository;
+  @Autowired
   private TimeRepository timeRepository;
+  @Autowired
+  private SceneRepository sceneRepository;
+  @Autowired
+  private StatusRepository statusRepository;
+  @Autowired
+  private ActorRepository actorRepository;
 
   @GetMapping(path="")
   public @ResponseBody Iterable<Performance> GetPerformances (@RequestParam(required = false) Integer id){
@@ -41,7 +49,7 @@ public class PerformanceController {
 
   @PostMapping(path="/add") 
   public @ResponseBody Performance AddNewPerformance (@RequestBody Performance newPerformance) {
-    if(newPerformance.getTime() == -1){
+    if(newPerformance.getTime().intValue() == -1){
       newPerformance.setTime(timeRepository.findById(1).get().getTime());
     }
     System.out.println(newPerformance.toString());
@@ -63,6 +71,31 @@ public class PerformanceController {
       performanceRepository.deleteById(id);
       System.out.println("Deleting performance ID: " + id);
       return "Performance removed.";
+    }
+  }
+
+  // (ArrayList<Auditioner> cast, ArrayList<Requirement> requirementList, Iterable<Status> statusList, int currentTime)
+  @PostMapping(path="/validate")
+  public @ResponseBody String ValidatePerformance (@RequestBody Performance performance){
+    Scene scene = sceneRepository.findById(performance.getSceneId()).get();
+    ArrayList<Auditioner> cast = new ArrayList<Auditioner>();
+    for(String c : performance.getParticipants().split(",")){
+      cast.add(new Auditioner(actorRepository.findById(Integer.parseInt(c)).get()));
+    }
+
+    ArrayList<Requirement> requirements = new ArrayList<Requirement>();
+    for(Requirement r : requirementRepository.findAll()){
+      System.out.println("Scanning requirement " + r.getId());
+      if(r.getSceneId().intValue() == scene.getId().intValue()){
+        System.out.println("Addint it!");
+        requirements.add(r);
+      }
+    }
+
+    if(scene.AllRequirementsSatisfied(cast, requirements, statusRepository.findAll(), timeRepository.findById(1).get().getTime())){
+      return "{\"result\":\"valid\"}";
+    }else{
+      return "{\"result\":\"invalid\"}";
     }
   }
 

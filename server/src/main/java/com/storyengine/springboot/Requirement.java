@@ -17,15 +17,12 @@ public class Requirement {
 
     private String requirement;
 
-    private Integer role;
-
 
     public Requirement() {}
 
-    public Requirement(Integer sceneId, String requirement, Integer role) {
+    public Requirement(Integer sceneId, String requirement) {
         this.sceneId = sceneId;
         this.requirement = requirement;
-        this.role = role;
     }
     
 
@@ -53,13 +50,6 @@ public class Requirement {
         this.requirement = requirement;
     }
 
-    public Integer getRole() {
-        return this.role;
-    }
-
-    public void setRole(Integer role) {
-        this.role = role;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -83,7 +73,6 @@ public class Requirement {
             " id='" + getId() + "'" +
             ", sceneId='" + getSceneId() + "'" +
             ", requirement='" + getRequirement() + "'" +
-            ", role='" + getRole() + "'" +
             "}";
     }
 

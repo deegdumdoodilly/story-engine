@@ -33,7 +33,7 @@ namespace HungerGamesClient
             if (json.GetBool("hasChosenOutcome")) {
                 hasChosenOutcome = true;
                 int chosenOutcomeId = json.GetInt("chosenOutcomeId");
-                chosenOutcome = new Outcome();
+                chosenOutcome = new Outcome(-1, -1, 0, "", "MISSING OUTCOME");
                 foreach (Outcome outcome in performance.scene.outcomes)
                 {
                     if(outcome.id == chosenOutcomeId)
@@ -46,7 +46,7 @@ namespace HungerGamesClient
             else
             {
                 hasChosenOutcome = false;
-                chosenOutcome = new Outcome();
+                chosenOutcome = new Outcome(-1, -1, 0, "", "MISSING OUTCOME");
             }
         }
 
@@ -79,6 +79,11 @@ namespace HungerGamesClient
         private VotingBooth votingBooth;
         private RosterForm rosterForm;
         private UserLogin userLogin;
+        private EditSim editSim;
+        private SceneEditor sceneEditor;
+
+        public Button editSimButtonRef;
+        public Button editScenesButtonRef;
 
         public static string GetConnectionString()
         {
@@ -100,6 +105,9 @@ namespace HungerGamesClient
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            editScenesButtonRef = editScenesButton;
+            editSimButtonRef = editSimButton;
+
             reference = this;
             UpdateUserLabel();
             RefreshLog();
@@ -129,7 +137,7 @@ namespace HungerGamesClient
         {
             try
             {
-                sceneList = new List<Scene>();
+                FetchScenes();
                 FetchActors();
                 FetchPerformances();
                 FetchBallots();
@@ -148,6 +156,18 @@ namespace HungerGamesClient
             {
                 Actor newActor = new Actor(j);
                 actorList.Add(newActor);
+            }
+        }
+
+        public static void FetchScenes()
+        {
+            sceneList = new List<Scene>();
+
+            List<JsonObject> sceneJsons = JsonObject.GetJsonsFromRequest("/scenes");
+
+            foreach(JsonObject json in sceneJsons)
+            {
+                sceneList.Add(new Scene(json));
             }
         }
 
@@ -208,7 +228,7 @@ namespace HungerGamesClient
 
             Label newLabel = new Label();
             newLabel.AutoSize = true;
-            newLabel.Font = new System.Drawing.Font("Baskerville Old Face", 14.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            newLabel.Font = new Font("Baskerville Old Face", 14.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             newLabel.Anchor = (AnchorStyles.Left | AnchorStyles.Right);
             newLabel.TextAlign = ContentAlignment.TopCenter;
             newLabel.Text = text;
@@ -308,6 +328,36 @@ namespace HungerGamesClient
             }
             rosterForm = new RosterForm();
             rosterForm.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (sceneEditor is null || sceneEditor.IsDisposed)
+            {
+                editScenesButton.Enabled = false;
+                this.Cursor = Cursors.WaitCursor;
+                sceneEditor = new SceneEditor();
+                sceneEditor.Show();
+            }
+            else
+            {
+                sceneEditor.Focus();
+            }
+        }
+
+        private void editSimButton_Click(object sender, EventArgs e)
+        {
+            if (editSim is null || editSim.IsDisposed)
+            {
+                editSimButton.Enabled = false;
+                Cursor = Cursors.WaitCursor;
+                editSim = new EditSim();
+                editSim.Show();
+            }
+            else
+            {
+                editSim.Focus();
+            }
         }
     }
 

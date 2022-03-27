@@ -37,6 +37,12 @@ public class SceneController {
     }
   }
 
+  @PostMapping(path="/validate") 
+  public @ResponseBody Scene ValidateScene (@RequestBody Scene newScene) {
+    System.out.println(newScene.toString());
+    return newScene;
+  }
+
   @PostMapping(path="/add") 
   public @ResponseBody Scene AddNewScene (@RequestBody Scene newScene) {
     System.out.println(newScene.toString());
@@ -61,6 +67,12 @@ public class SceneController {
     }else{
       if(!sceneRepository.existsById(id)){
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find scene with id " + id);
+      }
+      for (Scene s : sceneRepository.findAll()) {
+        if (s.getParentSceneId().intValue() == id){
+          s.setParentSceneId(-1);
+          sceneRepository.save(s);
+        }
       }
       sceneRepository.deleteById(id);
       System.out.println("Deleting scene ID: " + id);

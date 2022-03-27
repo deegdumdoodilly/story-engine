@@ -16,24 +16,24 @@ public class Auditioner implements Comparable{
         this.lowestFrequency = 99;
     }
 
-    public void AddRolePermutations(Scene scene, ArrayList<Auditioner> auditioners, ArrayList<Requirement> requirementsList, Iterable<Status> statusList){
+    public void AddRolePermutations(Scene scene, ArrayList<Auditioner> auditioners, ArrayList<Requirement> requirementsList, Iterable<Status> statusList, int time){
         ArrayList<Auditioner> cast = new ArrayList<Auditioner>();
         cast.add(this);
-        AddRolePermutationsRecursive(scene, cast, auditioners, requirementsList, statusList);
+        AddRolePermutationsRecursive(scene, cast, auditioners, requirementsList, statusList, time);
     }
 
-    private void AddRolePermutationsRecursive(Scene scene, ArrayList<Auditioner> cast, ArrayList<Auditioner> auditioners, ArrayList<Requirement> requirementsList, Iterable<Status> statusList){
+    private void AddRolePermutationsRecursive(Scene scene, ArrayList<Auditioner> cast, ArrayList<Auditioner> auditioners, ArrayList<Requirement> requirementsList, Iterable<Status> statusList, int time){
         if(scene.getNumParticipants() > cast.size()){
         // Need more members, attempt to add one
         for(Auditioner nextAuditioner : auditioners){
             if(!cast.contains(nextAuditioner)){
                 cast.add(nextAuditioner);
-                AddRolePermutationsRecursive(scene, cast, auditioners, requirementsList, statusList);
+                AddRolePermutationsRecursive(scene, cast, auditioners, requirementsList, statusList, time);
                 cast.remove(nextAuditioner);
             }
         }
         }else{
-            if(scene.AllRequirementsSatisfied(cast, requirementsList, statusList)){
+            if(scene.AllRequirementsSatisfied(cast, requirementsList, statusList, time)){
                 ArrayList<Role> associatedRoles = new ArrayList<Role>();
                 for(int i = 1; i <= cast.size(); i++){
                 Role newRole = new Role(cast.get(i-1), scene, i);
