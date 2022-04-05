@@ -17,20 +17,26 @@ public class Vote {
 
     private Integer voterId;
 
+    private Integer timeOfSubmission;
+
     private Integer chosenOutcomeId;
 
     private boolean inProgress;
 
     private boolean hasChosenOutcome;
 
+    private boolean isWinningVote;
+
     public Vote(){}
 
-    public Vote(Integer performanceId, Integer voterId, Integer chosenOutcomeId, boolean inProgress, boolean hasChosenOutcome) {
+    public Vote(Integer performanceId, Integer voterId, Integer timeOfSubmission, Integer chosenOutcomeId, boolean inProgress, boolean hasChosenOutcome) {
         this.performanceId = performanceId;
         this.voterId = voterId;
+        this.timeOfSubmission = timeOfSubmission;
         this.chosenOutcomeId = chosenOutcomeId;
         this.inProgress = inProgress;
         this.hasChosenOutcome = hasChosenOutcome;
+        this.isWinningVote = false;
     }
 
 
@@ -90,35 +96,19 @@ public class Vote {
         this.hasChosenOutcome = hasChosenOutcome;
     }
 
-    public Vote id(Integer id) {
-        setId(id);
-        return this;
+
+    public boolean isWinningVote() {
+        return this.isWinningVote;
     }
 
-    public Vote sceneId(Integer sceneId) {
-        setPerformanceId(sceneId);
-        return this;
+    public boolean getIsWinningVote() {
+        return this.isWinningVote;
     }
 
-    public Vote voterId(Integer voterId) {
-        setVoterId(voterId);
-        return this;
+    public void setIsWinningVote(boolean isWinningVote) {
+        this.isWinningVote = isWinningVote;
     }
 
-    public Vote chosenOutcomeId(Integer chosenOutcomeId) {
-        setChosenOutcomeId(chosenOutcomeId);
-        return this;
-    }
-
-    public Vote inProgress(boolean inProgress) {
-        setInProgress(inProgress);
-        return this;
-    }
-
-    public Vote hasChosenOutcome(boolean hasChosenOutcome) {
-        setHasChosenOutcome(hasChosenOutcome);
-        return this;
-    }
 
     @Override
     public boolean equals(Object o) {

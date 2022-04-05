@@ -19,11 +19,21 @@ namespace HungerGamesClient
             int fieldAndValueIndex = 0;
 
             bool inQuote = false;
+            bool escape = false;
 
             for (int i = 0; i < characters.Length; i++)
             {
                 char c = characters[i];
-                if (inQuote)
+                if (escape)
+                {
+                    fieldAndValue[fieldAndValueIndex] += c;
+                    escape = false;
+                }
+                else if (c == '\\')
+                {
+                    escape = true;
+                }
+                else if (inQuote)
                 {
                     if (c == '\"')
                     {
@@ -97,7 +107,7 @@ namespace HungerGamesClient
             List<JsonObject> result = new List<JsonObject>();
             foreach (string s in responseString)
             {
-                result.Add(new JsonObject(s.Replace("\\\"", "\"")));
+                result.Add(new JsonObject(s));
             }
             return result;
         }
@@ -138,6 +148,24 @@ namespace HungerGamesClient
                 string response = reader.ReadToEnd().Trim(trimChars);
                 return new JsonObject(response);
             }
+        }
+
+        public static List<JsonObject> GetJsonsFromPost(string endpoint)
+        {
+            string url = Properties.Settings.Default.api_url + endpoint;
+            WebRequest request = WebRequest.Create(url);
+            request.Method = "POST";
+
+            StreamReader responseReader = new StreamReader(request.GetResponse().GetResponseStream());
+            char[] trimChars = new char[] { '[', ']', '{', '}' };
+            string[] responseString = responseReader.ReadLine().Trim(trimChars).Split(new string[] { "},{" }, StringSplitOptions.RemoveEmptyEntries);
+
+            List<JsonObject> result = new List<JsonObject>();
+            foreach (string s in responseString)
+            {
+                result.Add(new JsonObject(s.Replace("\\\"", "\"")));
+            }
+            return result;
         }
 
         public string GetString(string key)

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HungerGamesClient
 {
-    public struct User
+    public class User
     {
         public int id;
         public string username;

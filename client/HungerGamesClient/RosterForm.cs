@@ -66,8 +66,14 @@ namespace HungerGamesClient
                 nameplate.TextAlign = ContentAlignment.MiddleCenter;
 
                 PictureBox pictureBox = new PictureBox();
-
-                pictureBox.BackgroundImage = Image.FromFile("Images/" + a.name + "_icon.png");
+                try
+                {
+                    pictureBox.BackgroundImage = Image.FromFile("Images/" + a.name + "_icon.png");
+                }
+                catch
+                {
+                    pictureBox.BackgroundImage = Image.FromFile("Images/default_icon.png");
+                }
                 pictureBox.BackgroundImageLayout = ImageLayout.Zoom;
                 pictureBox.Size = new Size(261, 115);
 

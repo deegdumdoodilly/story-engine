@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace HungerGamesClient
 {
-    public struct Performance
+    public class Performance
     {
         public int id;
         public Scene scene;
@@ -77,7 +77,7 @@ namespace HungerGamesClient
             string participantString = "";
             foreach (Actor a in participants)
                 participantString += a.id + ",";
-            participantString.Trim(',');
+            participantString = participantString.Trim(',');
 
             return "{"
                 + "\"id\": \"" + id + "\","

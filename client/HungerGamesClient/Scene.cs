@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace HungerGamesClient
 {
-    public enum OutcomeType { Positive, Negative, Neutral };
+    public enum OutcomeType { Positive, Harmful, Neutral };
     public class Scene
     {
         public int sceneId;
@@ -55,6 +55,20 @@ namespace HungerGamesClient
                 Outcome o = new Outcome(j);
                 outcomes.Add(o);
             }
+        }
+
+        public Scene Clone()
+        {
+            List<Requirement> requirementClone = new List<Requirement>();
+            List<Outcome> outcomeClone = new List<Outcome>();
+
+            foreach (Requirement requirement in requirements)
+                requirementClone.Add(new Requirement(requirement.id, requirement.sceneId, requirement.requirement, requirement.role));
+
+            foreach (Outcome outcome in outcomes)
+                outcomeClone.Add(new Outcome(outcome.id, outcome.sceneId, outcome.GetOutcomeInt(), outcome.effect, outcome.description));
+
+            return new Scene(sceneId, parentSceneId, priority, numParticipants, sceneName, requirementClone, outcomeClone, description, briefDescription);
         }
 
         public String toJSON()
@@ -181,7 +195,7 @@ namespace HungerGamesClient
             this.effect = effect;
             this.description = description;
             if (outcomeInt < 0)
-                this.outcomeType = OutcomeType.Negative;
+                this.outcomeType = OutcomeType.Harmful;
             else if (outcomeInt > 0)
                 this.outcomeType = OutcomeType.Positive;
             else
@@ -208,7 +222,7 @@ namespace HungerGamesClient
         {
             switch (outcomeType)
             {
-                case OutcomeType.Negative:
+                case OutcomeType.Harmful:
                     return -1;
                 case OutcomeType.Positive:
                     return 1;
@@ -219,25 +233,12 @@ namespace HungerGamesClient
 
         public override string ToString()
         {
-            /*if (description == "")
+            if (description == "")
             {
                 return "Empty outcome";
             }
-            else
-            {
-                int sum = 0;
-                foreach(char c in effect.ToCharArray())
-                {
-                    if(c == ' ')
-                        sum++;
-                }
-                if(sum < 3)
-                {
-                    return "Incomplete outcome definition";
-                }
-            }
-            return "character " + description + " (" + outcomeType.ToString() + ")";*/
-            return description;
+            string s = description + " (" + outcomeType.ToString() + ", " + effect + ")";
+            return s;
         }
 
         public string toJSON()

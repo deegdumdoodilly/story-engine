@@ -50,18 +50,34 @@ public class StatusController {
 
   @PostMapping(path="/add") 
   public @ResponseBody Status AddNewStatus (@RequestBody Status newStatus) {
+    for(Status s : statusRepository.findAll()){
+      if(s.getActorId().intValue() == newStatus.getActorId().intValue() && s.getStatus().equals(newStatus.getStatus())){
+        System.out.println(s.toString());
+        return s;
+      }
+    } 
     System.out.println(newStatus.toString());
     return statusRepository.save(newStatus);
   }
 
   @PostMapping(path="/remove") 
-  public @ResponseBody String RemoveStatus (@RequestParam(required = false) Integer id) {
+  public @ResponseBody String RemoveStatus (@RequestParam(required = false) Integer id, @RequestParam(required = false) Integer actorId) {
     if(id == null){
-      for (Status p : statusRepository.findAll()) {
-        System.out.println("Deleting status ID: " + p.getId());
-        statusRepository.delete(p);
+      if(actorId == null){
+        for (Status p : statusRepository.findAll()) {
+          System.out.println("Deleting status ID: " + p.getId());
+          statusRepository.delete(p);
+        }
+        return "Statuses removed.";
+      }else{
+        for (Status p : statusRepository.findAll()) {
+          if(p.getActorId().intValue() == actorId){
+            System.out.println("Deleting status ID: " + p.getId());
+            statusRepository.delete(p);
+          }
+        }
+        return "Statuses removed.";
       }
-      return "Statuses removed.";
     }else{
       if(!statusRepository.existsById(id)){
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Could not find status with id " + id);

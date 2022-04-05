@@ -29,16 +29,15 @@ namespace HungerGamesClient
             rawBox[1].Visible = false;
             attributeDropdown[0].Visible = false;
             attributeDropdown[1].Visible = false;
+            timeOfDayDropdown.Visible = false;
 
             for(int i = 1; i <= scene.numParticipants; i++)
             {
                 typeDropdown[0].Items.Add("Character " + i.ToString());
                 typeDropdown[1].Items.Add("Character " + i.ToString());
             }
-            typeDropdown[0].Items.Add("[Raw value]");
-            typeDropdown[0].Items.Add("Time");
+            typeDropdown[0].Items.Add("Time of day");
             typeDropdown[1].Items.Add("[Raw value]");
-            typeDropdown[1].Items.Add("Time");
 
             requirement = SceneEditor.selectedRequirement;
 
@@ -51,6 +50,9 @@ namespace HungerGamesClient
 
         private void ParseTokensFromRequirement(string requirement)
         {
+            // time [comparator] morning/afternoon/...
+            // character 1 name [comparator] "value"
+
             string buffer = "";
             string comparator = "";
 
@@ -58,6 +60,8 @@ namespace HungerGamesClient
             bool escapeNextChar = false;
             bool expectingCharacterField = false;
             bool expectingCharacterNumber = false;
+            bool expectingTime = false;
+            bool expectingRawValue = false;
 
             char[] charArray = requirement.ToCharArray();
 
@@ -91,7 +95,7 @@ namespace HungerGamesClient
                 {
                     if (expectingCharacterNumber)
                     {
-                        typeDropdown[expressionIndex].SelectedItem = "Character " + buffer;
+                        TypeDropdown1.SelectedItem = "Character " + buffer;
                         expectingCharacterField = true;
                         expectingCharacterNumber = false;
                     }
@@ -100,25 +104,27 @@ namespace HungerGamesClient
                         switch (buffer)
                         {
                             case "status":
-                                attributeDropdown[expressionIndex].SelectedIndex = 0;
+                                attributeDropdown1.SelectedIndex = 0;
                                 break;
                             case "environment":
-                                attributeDropdown[expressionIndex].SelectedIndex = 1;
+                                attributeDropdown1.SelectedIndex = 1;
                                 break;
                             case "name":
-                                attributeDropdown[expressionIndex].SelectedIndex = 2;
+                                attributeDropdown1.SelectedIndex = 2;
                                 break;
                         }
                         expectingCharacterField = false;
+                        expectingRawValue = true;
                     }
                     else if (buffer == "is" || buffer == "not" || buffer == "contains" || buffer == "greater" || buffer == "less" || buffer == "than")
                     {
-                        comparator += buffer;
+                        comparator += buffer + " ";
                         expressionIndex = 1;
                     }
                     else if (buffer == "time")
                     {
-                        typeDropdown[expressionIndex].SelectedIndex = 2;
+                        TypeDropdown1.SelectedIndex = TypeDropdown1.Items.Count - 1;
+                        expectingTime = true;
                     }
                     else if (buffer == "character")
                     {
@@ -126,12 +132,21 @@ namespace HungerGamesClient
                         attributeDropdown[expressionIndex].Visible = true;
                         expectingCharacterNumber = true;
                     }
-                    else
+                    else if (expectingRawValue)
                     {
-                        // Buffer contains a literal value.
-                        typeDropdown[expressionIndex].SelectedIndex = 1;
-                        rawBox[expressionIndex].Visible = true;
-                        rawBox[expressionIndex].Text = buffer;
+                        RawBox2.Text = buffer.Trim('\"');
+                    }
+                    else if (expectingTime)
+                    {
+                        for (int j = 0; j < timeOfDayDropdown.Items.Count; j++)
+                        {
+                            string item = (string) timeOfDayDropdown.Items[j];
+                            if(item.ToLower().Equals(buffer))
+                            {
+                                timeOfDayDropdown.SelectedIndex = j;
+                                break;
+                            }
+                        }
                     }
                     buffer = "";
                 }
@@ -170,49 +185,64 @@ namespace HungerGamesClient
 
         private string UpdateTextBox()
         {
-            if(TypeDropdown1.SelectedItem is null || TypeDropdown2.SelectedItem is null || comparisionBox.SelectedItem is null)
+            textBox1.Text = "";
+            string result = "";
+
+            if (comparisionBox.SelectedIndex == -1)
             {
+                textBox1.Text = "";
                 return "";
             }
-            string result = "";
-            string type1 = ((string)TypeDropdown1.SelectedItem).ToLower();
-            if(type1 == "raw value")
+
+            string comparator = comparisionBox.Text.ToLower();
+            int i = TypeDropdown1.SelectedIndex;
+            if (i == -1)
             {
-                result += "\"" + rawBox[0].Text + "\" ";
+                return result;
+            }
+            else if (i == TypeDropdown1.Items.Count - 1)
+            {
+                // Time of day
+                result += "time ";
+
+                if(timeOfDayDropdown.SelectedIndex == -1)
+                {
+                    return "";
+                }
+
+                result += comparator + " ";
+                result += timeOfDayDropdown.SelectedItem.ToString().ToLower();
             }
             else
             {
-                result += type1 + " ";
+                // Character
+                result += TypeDropdown1.SelectedItem.ToString().ToLower() + " ";
 
-                if(type1 != "time")
+                if (attributeDropdown1.SelectedIndex == -1)
                 {
-                    if(attributeDropdown[0].SelectedItem is null)
+                    return "";
+                }
+
+                string field = attributeDropdown1.SelectedItem.ToString().ToLower();
+
+                result += field + " ";
+
+                if(field == "flag")
+                {
+                    if (RawBox1.Text == "")
                     {
                         return "";
                     }
-                    result += attributeDropdown[0].SelectedItem.ToString().ToLower() + " ";
+                    result += "\"" + RawBox1.Text + "\" ";
                 }
-            }
 
-            result += comparisionBox.Text.ToLower() + " ";
-
-            string type2 = ((string)TypeDropdown2.SelectedItem).ToLower();
-            if (type2 == "raw value")
-            {
-                result += "\"" + rawBox[1].Text + "\"";
-            }
-            else
-            {
-                result += type2;
-
-                if (type2 != "time")
+                if (RawBox2.Text == "")
                 {
-                    if (attributeDropdown[1].SelectedItem is null)
-                    {
-                        return "";
-                    }
-                    result += " " + attributeDropdown[1].SelectedItem.ToString().ToLower();
+                    return "";
                 }
+
+                result += comparator + " ";
+                result += "\"" + RawBox2.Text + "\"";
             }
 
             textBox1.Text = result;
@@ -221,21 +251,27 @@ namespace HungerGamesClient
 
         private void TypeDropdown1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string selected = (string)TypeDropdown1.SelectedItem;
-            if (selected.Contains("Character"))
-            {
-                rawBox[0].Visible = false;
-                attributeDropdown[0].Visible = true;
+            int i = TypeDropdown1.SelectedIndex;
+            if (i == -1) {
+                TypeDropdown2.Visible = false;
+            }else if(i == TypeDropdown1.Items.Count - 1) {
+                // Time of day
+                attributeDropdown1.Visible = false;
+                RawBox1.Visible = false;
+                TypeDropdown2.Visible = false;
+                attributeDropdown2.Visible = false;
+                RawBox2.Visible = false;
+                timeOfDayDropdown.Visible = true;
             }
-            else if(selected == "[Raw value]")
+            else
             {
-                rawBox[0].Visible = true;
-                attributeDropdown[0].Visible = false;
-            }
-            else if(selected == "Time")
-            {
-                rawBox[0].Visible = false;
-                attributeDropdown[0].Visible = false;
+                // Character
+                attributeDropdown1.Visible = true;
+                RawBox1.Visible = false;
+                TypeDropdown2.Visible = false;
+                attributeDropdown2.Visible = false;
+                RawBox2.Visible = true;
+                timeOfDayDropdown.Visible = false;
             }
             UpdateTextBox();
         }
@@ -278,6 +314,29 @@ namespace HungerGamesClient
 
         private void attributeDropdown1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Status, Environment, Name, Flag
+            RawBox1.Visible = false;
+            TypeDropdown2.Visible = false;
+            attributeDropdown2.Visible = false;
+            RawBox2.Visible = true;
+            timeOfDayDropdown.Visible = false;
+            switch (attributeDropdown1.SelectedIndex)
+            {
+                case -1:
+                    RawBox2.Visible = false;
+                    timeOfDayDropdown.Visible = TypeDropdown1.SelectedIndex == TypeDropdown1.Items.Count - 1;
+                    break;
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    RawBox1.Visible = true;
+                    break;
+            }
+
             UpdateTextBox();
         }
 
@@ -299,6 +358,11 @@ namespace HungerGamesClient
             SceneEditor.saveButtonRef.Enabled = true;
 
             this.Close();
+        }
+
+        private void timeOfDayDropdown_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateTextBox();
         }
     }
 }

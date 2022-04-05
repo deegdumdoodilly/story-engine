@@ -25,6 +25,8 @@ public class Performance {
 
     private Integer time;
 
+    private Integer flavorAuthor;
+
     public Performance(){};
 
     public Performance(Integer sceneId, boolean inProgress, Integer winningVote, String flavor, String participants, Integer time) {
@@ -34,6 +36,7 @@ public class Performance {
         this.flavor = flavor;
         this.participants = participants;
         this.time = time;
+        this.flavorAuthor = -1;
     }
 
     public Performance(Integer sceneId, Integer time){
@@ -110,6 +113,16 @@ public class Performance {
     }
 
 
+    public Integer getFlavorAuthor() {
+        return this.flavorAuthor;
+    }
+
+    public void setFlavorAuthor(Integer flavorAuthor) {
+        this.flavorAuthor = flavorAuthor;
+    }
+
+
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -136,6 +149,7 @@ public class Performance {
             ", flavor='" + getFlavor() + "'" +
             ", participants='" + getParticipants() + "'" +
             ", time='" + getTime() + "'" +
+            ", flavorAuthor='" + getFlavorAuthor() + "'" +
             "}";
     }
 

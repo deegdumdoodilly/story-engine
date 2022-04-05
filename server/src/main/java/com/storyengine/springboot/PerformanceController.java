@@ -31,6 +31,8 @@ public class PerformanceController {
   @Autowired
   private StatusRepository statusRepository;
   @Autowired
+  private FlagRepository flagRepository;
+  @Autowired
   private ActorRepository actorRepository;
 
   @GetMapping(path="")
@@ -92,7 +94,7 @@ public class PerformanceController {
       }
     }
 
-    if(scene.AllRequirementsSatisfied(cast, requirements, statusRepository.findAll(), timeRepository.findById(1).get().getTime())){
+    if(scene.AllRequirementsSatisfied(cast, requirements, statusRepository.findAll(), flagRepository.findAll(), timeRepository.findById(1).get().getTime())){
       return "{\"result\":\"valid\"}";
     }else{
       return "{\"result\":\"invalid\"}";

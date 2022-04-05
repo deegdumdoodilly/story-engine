@@ -13,6 +13,7 @@ namespace HungerGamesClient
         public static Requirement selectedRequirement;
         public static Outcome selectedOutcome;
         public static Scene selectedScene;
+        public static Scene backupScene;
         private RequirementEditor reqEditor;
         private OutcomeEditor outEditor;
         private RunScene runScene;
@@ -159,12 +160,17 @@ namespace HungerGamesClient
                 sceneListBox.SelectedIndex = sceneListLastIndex;
                 if (!ConfirmDiscardChanges())
                 {
+                    backupScene = null;
                     lockSceneList = false;
                     return;
                 }
+                Scene clone = backupScene.Clone();
+                sceneListBox.Items[sceneListLastIndex] = clone;
                 sceneListBox.SelectedIndex = targetIndex;
                 lockSceneList = false;
             }
+
+            backupScene = ((Scene)sceneListBox.SelectedItem).Clone();
 
             sceneListLastIndex = sceneListBox.SelectedIndex;
 
@@ -193,11 +199,25 @@ namespace HungerGamesClient
             }
         }
 
-        private void saveButton_Click(object sender, EventArgs e)
+        private bool SaveScene()
         {
+            this.Cursor = Cursors.WaitCursor;
+            bool hasAcceptableOutcomes = false;
+            foreach(Outcome outcome in selectedScene.outcomes)
+            {
+                if(outcome.outcomeType == OutcomeType.Neutral)
+                {
+                    hasAcceptableOutcomes = true;
+                    break;
+                }
+            }
+            if (!hasAcceptableOutcomes)
+            {
+                MessageBox.Show("Scene must have at least one neutral outcome.", "Scene unable to save", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+
             saveButton.Enabled = false;
             unsavedChanges = false;
-            this.Cursor = Cursors.WaitCursor;
 
             string sceneJSON = AssembleSceneJSON();
             string issue = "";
@@ -220,6 +240,8 @@ namespace HungerGamesClient
             }
             catch
             {
+                unsavedChanges = true;
+                saveButton.Enabled = true;
                 MessageBox.Show("Error, the formatting of " + issue + " was not accepted by the server. Make sure you have not used any invalid characters (including line breaks) in your text fields.\n Your changes have been kept locally for you to reformat and try again.", "Invalid format", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 sceneListBox.Text = selectedScene.sceneName;
 
@@ -229,7 +251,7 @@ namespace HungerGamesClient
 
                 this.Cursor = Cursors.Default;
                 sceneListBox.SelectedIndex = sceneListLastIndex;
-                return;
+                return false;
             }
 
 
@@ -239,7 +261,7 @@ namespace HungerGamesClient
             JsonObject response = JsonObject.PostWithJson("/scenes/add", sceneJSON);
             Scene newScene = new Scene(response);
 
-            foreach(Requirement r in selectedScene.requirements)
+            foreach (Requirement r in selectedScene.requirements)
             {
                 r.sceneId = newScene.sceneId;
                 JsonObject.PostWithJson("/requirements/add", r.toJSON());
@@ -261,6 +283,13 @@ namespace HungerGamesClient
 
             this.Cursor = Cursors.Default;
             sceneListBox.SelectedIndex = sceneListLastIndex;
+
+            return true;
+        }
+
+        private void saveButton_Click(object sender, EventArgs e)
+        {
+            SaveScene();
         }
 
         private string AssembleSceneJSON()
@@ -377,11 +406,20 @@ namespace HungerGamesClient
         {
             Cursor = Cursors.WaitCursor;
             addScene.Enabled = false;
+
             Scene newScene = new Scene(-1, -1, 1, 1, "New Scene", new List<Requirement>(), new List<Outcome>(), "", "");
 
             JsonObject newSceneJSON = JsonObject.PostWithJson("/scenes/add", newScene.toJSON());
 
             newScene = new Scene(newSceneJSON);
+
+            Outcome newOutcome = new Outcome(-1, newScene.sceneId, 0, "", "");
+
+            JsonObject newOutcomeJSON = JsonObject.PostWithJson("/outcomes/add", newOutcome.toJSON());
+
+            newOutcome = new Outcome(newOutcomeJSON);
+
+            newScene.outcomes.Add(newOutcome);
 
             scenes.Add(newScene);
 
@@ -389,10 +427,11 @@ namespace HungerGamesClient
 
             sceneListBox.Items.Add(newScene);
 
-            UpdateTextFields();
 
             sceneListBox.SelectedItem = newScene;
             selectedScene = newScene;
+
+            UpdateTextFields();
 
             lockSceneList = false;
 
@@ -437,10 +476,24 @@ namespace HungerGamesClient
                 unsavedChanges = true;
                 saveButton.Enabled = true;
             }
+            
+        }
+
+        private void participantsBox_ValueChanged(object sender, EventArgs e)
+        {
+            selectedScene.numParticipants = (int) participantsBox.Value;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (unsavedChanges)
+            {
+                if (!SaveScene())
+                {
+                    return;
+                }
+            }
+
             if (runScene == null || runScene.IsDisposed)
             {
                 runScene = new RunScene();
@@ -450,6 +503,11 @@ namespace HungerGamesClient
                 runScene.Close();
             }
             runScene.Show();
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

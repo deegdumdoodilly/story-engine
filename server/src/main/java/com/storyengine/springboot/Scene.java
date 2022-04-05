@@ -69,11 +69,9 @@ public class Scene {
     }
 
     public boolean AllRequirementsSatisfied(ArrayList<Auditioner> cast, ArrayList<Requirement> requirementList,
-            Iterable<Status> statusList, int currentTime) {
-        System.out.println("Starting test");
-        System.out.println("");
+            Iterable<Status> statusList, Iterable<Flag> flagList, int currentTime) {
         for (Requirement req : requirementList) {
-            if (req.getSceneId().intValue() == getId().intValue() && !RequirementSatisfied(req, cast, statusList, currentTime)) {
+            if (req.getSceneId().intValue() == getId().intValue() && !RequirementSatisfied(req, cast, statusList, flagList, currentTime)) {
                 return false;
             }
         }
@@ -81,14 +79,14 @@ public class Scene {
     }
 
     public boolean AllRequirementsSatisfied(Auditioner auditioner, ArrayList<Requirement> requirementList,
-            Iterable<Status> statusList, int currentTime) {
+            Iterable<Status> statusList, Iterable<Flag> flagList, int currentTime) {
         ArrayList<Auditioner> cast = new ArrayList<Auditioner>();
         cast.add(auditioner);
-        return AllRequirementsSatisfied(cast, requirementList, statusList, currentTime);
+        return AllRequirementsSatisfied(cast, requirementList, statusList, flagList, currentTime);
     }
 
     public static boolean RequirementSatisfied(Requirement requirement, ArrayList<Auditioner> cast,
-            Iterable<Status> statusList, int currentTime) {
+            Iterable<Status> statusList, Iterable<Flag> flagList, int currentTime) {
 
         // Tokenize by space
 
@@ -109,6 +107,7 @@ public class Scene {
         boolean expectingCharacterNumber = false;
         int characterNumber = -1;
         boolean expectingCharacterField = false;
+        boolean expectingFlagKey = false;
         //System.out.println(requirementText);
         for (int i = 0; i <= charArray.length; i++) {
             char character;
@@ -128,9 +127,9 @@ public class Scene {
                 buffer += character;
             } else if (buffer.length() > 0) {
                 // Character was a non-quoted space
-                //System.out.println("Processing " + buffer);
+                // System.out.println("Processing " + buffer);
                 if (expectingCharacterNumber) {
-                    //System.out.println("result: char num");
+                    // System.out.println("result: char num");
                     // Buffer should contain a character number
                     try {
                         characterNumber = Integer.parseInt(buffer);
@@ -144,8 +143,16 @@ public class Scene {
                     }
                     expectingCharacterField = true;
                     expectingCharacterNumber = false;
+                } else if (expectingFlagKey) {
+                    Actor actor = cast.get(characterNumber - 1).actor;
+                    for(Flag flag : flagList){
+                        if(flag.getActorId().intValue() == actor.getId().intValue() && flag.getKey().equals(buffer)){
+                            currentExpression.add(flag.getValue());
+                        }
+                    }
+                    expectingFlagKey = false;
                 } else if (expectingCharacterField) {
-                    //System.out.println("result: char field");
+                    // System.out.println("result: char field");
                     Actor actor = cast.get(characterNumber - 1).actor;
                     // Buffer should contain a character field
                     if (buffer.equals("status")) {
@@ -163,14 +170,20 @@ public class Scene {
                         currentExpression.add(actor.getEnvironment());
                     } else if (buffer.equals("name")) {
                         currentExpression.add(actor.getName());
+                    } else if (buffer.equals("flag")) {
+                        expectingFlagKey = true;
                     } else {
                         //System.out.println("Did not recognize character field \'" + buffer + "\', " + requirementText);
                     }
                     expectingCharacterField = false;
+                } else if(charArray[i-1] == '\"'){
+                    // Term was in quotes, add it without processing
+                    // System.out.println("result: literal");
+                    currentExpression.add(buffer);
                 } else if (buffer.equals("is") || buffer.equals("not") || buffer.equals("contains")
                         || buffer.equals("contain") || buffer.equals("greater") || buffer.equals("less")
                         || buffer.equals("than")) {
-                    //System.out.println("result: operand");
+                    // System.out.println("result: operand");
                     // Buffer represents an operand
                     if (secondExpression.size() > 0) {
                         System.out.println("Error, only one comparator expression permitted: " + requirementText);
@@ -179,13 +192,29 @@ public class Scene {
                     comparator += buffer;
                     currentExpression = secondExpression;
                 } else if (buffer.equals("character")) {
-                    //System.out.println("result: character");
+                    // System.out.println("result: character");
                     // Buffer indicates the start of a character field
                     expectingCharacterNumber = true;
                 } else if (buffer.equals("time")) {
-                    //System.out.println("result: time");
+                    // System.out.println("result: time");
                     // Buffer indicates the start of a character field
                     currentExpression.add("" + currentTime);
+                } else if (buffer.equals("morning")){
+                    for(int t = 0; t <= currentTime; t+=4){
+                        currentExpression.add(t + "");
+                    }
+                } else if (buffer.equals("afternoon")){
+                    for(int t = 1; t <= currentTime; t+=4){
+                        currentExpression.add(t + "");
+                    }
+                } else if (buffer.equals("evening")){
+                    for(int t = 2; t <= currentTime; t+=4){
+                        currentExpression.add(t + "");
+                    }
+                } else if (buffer.equals("night")){
+                    for(int t = 3; t <= currentTime; t+=4){
+                        currentExpression.add(t + "");
+                    }
                 } else if (!buffer.equals("or") && !buffer.equals("does")) {
                     // Buffer contains a literal value. We ignore 'or's and discard them
                     currentExpression.add(buffer);
@@ -199,6 +228,14 @@ public class Scene {
         }
 
         // Evaluate expressions
+        for(String a : firstExpression)
+            System.out.println("f: " + a);
+            
+        for(String a : secondExpression)
+            System.out.println("s: " + a);
+
+        System.out.println("comparator " + comparator);
+
         boolean truthValue = true;
         if (comparator.contains("not")) {
             truthValue = false;

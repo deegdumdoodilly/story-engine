@@ -100,7 +100,7 @@ public class VoteController {
       Vote vote = voteRepository.findById(id).get();
       if(vote.isInProgress()){
         vote.setChosenOutcomeId(oId);
-        vote.hasChosenOutcome(true);
+        vote.setHasChosenOutcome(true);
         voteRepository.save(vote);
         return voteRepository.findById(id).get();
       }else{  

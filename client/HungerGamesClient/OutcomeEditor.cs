@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Collections;
+
+using System.Collections.Generic;
 
 namespace HungerGamesClient
 {
@@ -20,16 +23,20 @@ namespace HungerGamesClient
             selectedScene = SceneEditor.selectedScene;
             selectedOutcome = SceneEditor.selectedOutcome;
 
-            dropdown.Enabled = false;
+            functionDropdown.Enabled = false;
             inputBox.Enabled = false;
             button1.Enabled = false;
             characterDropdown.Enabled = false;
 
-            dropdown.Items.Add("set environment");
-            dropdown.Items.Add("add status");
-            dropdown.Items.Add("remove status");
+            functionDropdown.Items.Add("set environment");
+            functionDropdown.Items.Add("add status");
+            functionDropdown.Items.Add("remove status");
+            functionDropdown.Items.Add("set flag");
+            functionDropdown.Items.Add("increase flag");
+            functionDropdown.Items.Add("decrease flag");
+            functionDropdown.Items.Add("remove flag");
 
-            for(int i = 1; i <= selectedScene.numParticipants; i++)
+            for (int i = 1; i <= selectedScene.numParticipants; i++)
             {
                 characterDropdown.Items.Add("character " + i);
             }
@@ -59,116 +66,148 @@ namespace HungerGamesClient
         {
             if (lockListbox)
                 return;
+            lockListbox = true;
             if (listBox1.SelectedIndex == -1)
             {
-                dropdown.SelectedIndex = -1;
-                dropdown.Enabled = false;
+                functionDropdown.SelectedIndex = -1;
+                functionDropdown.Enabled = false;
                 inputBox.Text = "";
                 characterDropdown.Enabled = false;
                 inputBox.Enabled = false;
                 button1.Enabled = false;
+                lockListbox = false;
                 return;
             }
 
+            List<String> terms = new List<String>();
+            bool inQuote = false;
+            string buffer = "";
+
             string effect = listBox1.SelectedItem.ToString().Trim();
-            effect = effect.Substring(effect.IndexOf(' ') + 1);
-            int sum = 0;
             foreach (char c in effect)
             {
-                if (c == ' ')
+                if (c == ' ' && !inQuote)
                 {
-                    sum++;
-                    if (sum >= 3)
-                        break;
+                    terms.Add(buffer);
+                    buffer = "";
+                }
+                else if(c == '\"')
+                {
+                    inQuote = !inQuote;
+                }
+                else
+                {
+                    buffer += c;
                 }
             }
+            if (buffer.Length > 0)
+                terms.Add(buffer);
 
-            if (sum < 3)
+            if (terms.Count < 4)
             {
-                dropdown.SelectedIndex = -1;
+                functionDropdown.SelectedIndex = -1;
                 inputBox.Text = "";
-                dropdown.Enabled = false;
+                functionDropdown.Enabled = false;
                 inputBox.Enabled = false;
                 characterDropdown.Enabled = true;
                 button1.Enabled = true;
+                lockListbox = false;
                 return;
             }
 
-            dropdown.Enabled = true;
+            functionDropdown.Enabled = true;
             inputBox.Enabled = true;
             button1.Enabled = true;
             characterDropdown.Enabled = true;
 
-            string numberPhrase = effect.Substring(0, effect.IndexOf(' '));
-            effect = effect.Substring(effect.IndexOf(' ') + 1);
+            int characterNumber = int.Parse(terms[1]) - 1;
+            string functionPhrase = terms[2] + " " + terms[3];
 
-            string firstPhrase = effect.Substring(0, effect.IndexOf(' '));
-            effect = effect.Substring(effect.IndexOf(' ') + 1);
+            characterDropdown.SelectedIndex = characterNumber;
 
-            string secondPhrase = effect.Substring(0, effect.IndexOf(' '));
-            string thirdPhrase = effect.Substring(effect.IndexOf(' ') + 1);
+            /*
+            functionDropdown.Items.Add("set environment");
+            functionDropdown.Items.Add("add status");
+            functionDropdown.Items.Add("remove status");
+            functionDropdown.Items.Add("set flag");
+            functionDropdown.Items.Add("increase flag");
+            functionDropdown.Items.Add("decrease flag");
+            functionDropdown.Items.Add("remove flag");*/
 
-            characterDropdown.SelectedIndex = int.Parse(numberPhrase) - 1;
+            prepositionLabel.Visible = false;
+            inputBox2.Visible = false;
 
-            switch (firstPhrase)
+            lockListbox = false;
+            switch (functionPhrase)
             {
-                case "set":
-                    if(secondPhrase == "environment")
-                    {
-                        dropdown.SelectedIndex = 0;
-                    }
+                case "set status":
+                    functionDropdown.SelectedIndex = 0;
                     break;
-                case "add":
-                    if (secondPhrase == "status")
-                    {
-                        dropdown.SelectedIndex = 1;
-                    }
+                case "add status":
+                    functionDropdown.SelectedIndex = 1;
                     break;
-                case "remove":
-                    if (secondPhrase == "status")
-                    {
-                        dropdown.SelectedIndex = 2;
-                    }
+                case "remove status":
+                    functionDropdown.SelectedIndex = 2;
+                    break;
+                case "set flag":
+                    if (terms.Count < 6)
+                        return;
+                    functionDropdown.SelectedIndex = 3;
+                    prepositionLabel.Visible = true;
+                    prepositionLabel.Text = "to";
+                    inputBox2.Visible = true;
+                    inputBox2.Text = terms[5];
+                    break;
+                case "increase flag":
+                    if (terms.Count < 6)
+                        return;
+                    functionDropdown.SelectedIndex = 4;
+                    prepositionLabel.Visible = true;
+                    prepositionLabel.Text = "by";
+                    inputBox2.Visible = true;
+                    inputBox2.Text = terms[5];
+                    break;
+                case "decrease flag":
+                    if (terms.Count < 6)
+                        return;
+                    functionDropdown.SelectedIndex = 5;
+                    prepositionLabel.Visible = true;
+                    prepositionLabel.Text = "by";
+                    inputBox2.Visible = true;
+                    inputBox2.Text = terms[5];
+                    break;
+                case "remove flag":
+                    functionDropdown.SelectedIndex = 6;
                     break;
             }
-            inputBox.Text = thirdPhrase.Trim(new char[] {'\"'});
+            inputBox.Text = terms[4].Trim(new char[] {'\"'});
         }
 
-        private void dropdown_SelectedIndexChanged(object sender, EventArgs e)
+        private void UpdateEffectInListBox(object sender, EventArgs e)
         {
-            if (!lockList && listBox1.SelectedIndex != -1 && dropdown.ContainsFocus)
+            if (!lockList && listBox1.SelectedIndex != -1)
             {
-                listBox1.Items[listBox1.SelectedIndex] = characterDropdown.Text + " " + dropdown.Text + " \"" + inputBox.Text + "\"";
+                lockList = true;
+                lockListbox = true;
+                listBox1.Items[listBox1.SelectedIndex] = characterDropdown.Text + " " + functionDropdown.Text + " \"" + inputBox.Text + "\"";
+                if (prepositionLabel.Visible)
+                    listBox1.Items[listBox1.SelectedIndex] += " \"" + inputBox2.Text + "\"";
+                lockList = false;
+                lockListbox = false;
             }
         }
 
         private void inputBox_TextChanged(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex != -1)
-            {
-                lockList = true;
-                listBox1.Items[listBox1.SelectedIndex] = characterDropdown.Text + " " + dropdown.Text + " \"" + inputBox.Text + "\"";
-                lockList = false;
-                //inputBox.Focus();
-            }
-        }
-
-        private void inputBox_TextChangedEnter(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            /*if (listBox1.SelectedIndex != -1 && e.KeyCode == Keys.Enter)
-            {
-                lockList = true;
-                listBox1.Items[listBox1.SelectedIndex] = characterDropdown.Text + " " + dropdown.Text + " \"" + inputBox.Text + "\"";
-                lockList = false;
-            }*/
+            UpdateEffectInListBox(sender, e);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             // Delete
-            dropdown.SelectedIndex = -1;
+            functionDropdown.SelectedIndex = -1;
             inputBox.Text = "";
-            dropdown.Enabled = false;
+            functionDropdown.Enabled = false;
             characterDropdown.Enabled = false;
             inputBox.Enabled = false;
             button1.Enabled = false;
@@ -183,6 +222,7 @@ namespace HungerGamesClient
 
         private void button3_Click(object sender, EventArgs e)
         {
+            Cursor = Cursors.WaitCursor;
             string effectText = "";
 
             foreach(string s in listBox1.Items)
@@ -202,7 +242,7 @@ namespace HungerGamesClient
                     selectedOutcome.outcomeType = OutcomeType.Neutral;
                     break;
                 case 2:
-                    selectedOutcome.outcomeType = OutcomeType.Negative;
+                    selectedOutcome.outcomeType = OutcomeType.Harmful;
                     break;
             }
 
@@ -212,12 +252,31 @@ namespace HungerGamesClient
             SceneEditor.unsavedChanges = true;
             SceneEditor.saveButtonRef.Enabled = true;
 
+            Cursor = Cursors.Default;
             this.Close();
         }
 
-        private void inputBox_TextChanged_1(object sender, EventArgs e)
+        private void functionDropdown_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            if (functionDropdown.SelectedIndex >= 3 && functionDropdown.SelectedIndex <= 5)
+            {
+                if(functionDropdown.SelectedIndex == 3)
+                {
+                    prepositionLabel.Text = "to";
+                }
+                else
+                {
+                    prepositionLabel.Text = "by";
+                }
+                inputBox2.Visible = true;
+                prepositionLabel.Visible = true;
+            }
+            else
+            {
+                inputBox2.Visible = false;
+                prepositionLabel.Visible = false;
+            }
+            this.UpdateEffectInListBox(sender, e);
         }
     }
 }

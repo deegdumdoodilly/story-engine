@@ -61,10 +61,10 @@ namespace HungerGamesClient
                 }
                 catch
                 {
-                    user = new User();
+                    user = null;
                 }
                 passhash = user.passhash;
-                if (user.username is null)
+                if (user is null)
                 {
                     // Found no matching user for saved login
                     MessageBox.Show("Failed automatic login, you will now be asked to log in normally (username not accepted).");

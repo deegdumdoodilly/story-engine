@@ -5,62 +5,6 @@ using System.Windows.Forms;
 
 namespace HungerGamesClient
 {   
-    public struct Ballot
-    {
-        public int id;
-        public Performance performance;
-        public User voter;
-        public Outcome chosenOutcome;
-        public bool hasChosenOutcome;
-        public bool inProgress;
-
-        public Ballot(int id, Performance performance, int voterId, Outcome chosenOutcome, bool inProgress)
-        {
-            this.id = id;
-            this.performance = performance;
-            this.voter = MainForm.userList.Find(x => x.id == voterId);
-            this.chosenOutcome = chosenOutcome;
-            this.inProgress = inProgress;
-            hasChosenOutcome = (chosenOutcome.id == -1);
-        }
-
-        public Ballot(JsonObject json)
-        {
-            id = json.GetInt("id");
-            performance = MainForm.performanceList.Find(x => x.id == json.GetInt("performanceId"));
-            voter = MainForm.userList.Find(x => x.id == json.GetInt("voterId"));
-            inProgress = json.GetBool("inProgress");
-            if (json.GetBool("hasChosenOutcome")) {
-                hasChosenOutcome = true;
-                int chosenOutcomeId = json.GetInt("chosenOutcomeId");
-                chosenOutcome = new Outcome(-1, -1, 0, "", "MISSING OUTCOME");
-                foreach (Outcome outcome in performance.scene.outcomes)
-                {
-                    if(outcome.id == chosenOutcomeId)
-                    {
-                        chosenOutcome = outcome;
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                hasChosenOutcome = false;
-                chosenOutcome = new Outcome(-1, -1, 0, "", "MISSING OUTCOME");
-            }
-        }
-
-        public override string ToString()
-        {
-            string output = performance.scene.sceneName + " (";
-            foreach (Actor actor in performance.participants)
-            {
-                output += actor.name + ", ";
-            }
-            return output.Substring(0, output.Length - 2) + ")";
-        }
-    }
-
     public partial class MainForm : Form
     {
         public MainForm()
@@ -76,6 +20,7 @@ namespace HungerGamesClient
         public static List<User> userList;
 
         public static User currentUser;
+
         private VotingBooth votingBooth;
         private RosterForm rosterForm;
         private UserLogin userLogin;
@@ -84,6 +29,8 @@ namespace HungerGamesClient
 
         public Button editSimButtonRef;
         public Button editScenesButtonRef;
+
+        private int logPanelWidthDifference = 0;
 
         public static string GetConnectionString()
         {
@@ -108,7 +55,11 @@ namespace HungerGamesClient
             editScenesButtonRef = editScenesButton;
             editSimButtonRef = editSimButton;
 
+            logPanelWidthDifference = logPanel.Width - panel1.Width;
+
             reference = this;
+
+            SyncData();
             UpdateUserLabel();
             RefreshLog();
             if (userLogin is null)
@@ -117,12 +68,16 @@ namespace HungerGamesClient
             }
             userLogin.UpdateOptions();
             Dropdown.SelectedIndex = 0;
+
+            RefreshButton.Focus();
         }
 
         public void RefreshLog()
         {
             SyncData();
+            Control preservePanel = logPanel.Controls[0];
             logPanel.Controls.Clear();
+            logPanel.Controls.Add(preservePanel);
             foreach (Performance s in performanceList)
             {
                 if (!s.inProgress)
@@ -131,6 +86,7 @@ namespace HungerGamesClient
                     AddDescription(s);
                 }
             }
+            ResizeLog();
         }
 
         public void SyncData()
@@ -157,6 +113,7 @@ namespace HungerGamesClient
                 Actor newActor = new Actor(j);
                 actorList.Add(newActor);
             }
+            actorList.Sort();
         }
 
         public static void FetchScenes()
@@ -209,13 +166,17 @@ namespace HungerGamesClient
             return newScene;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void refreshButton_Click(object sender, EventArgs e)
         {
+            RefreshButton.Enabled = false;
+            Cursor = Cursors.WaitCursor;
             RefreshLog();
             if(!(votingBooth is null))
             {
                 votingBooth.RefreshBooth();
             }
+            RefreshButton.Enabled = true;
+            Cursor = Cursors.Default;
         }
 
         private void AddDescription(Performance p)
@@ -223,7 +184,7 @@ namespace HungerGamesClient
             string text = p.flavor;
             if(text == "")
             {
-                text = p.GetDescription() + " " + p.GetChosenOutcome().GetDescription(p);
+                text = p.GetDescription() + "\n" + p.GetChosenOutcome().GetDescription(p);
             }
 
             Label newLabel = new Label();
@@ -234,22 +195,6 @@ namespace HungerGamesClient
             newLabel.Text = text;
             logPanel.Controls.Add(newLabel);
         }
-
-        /*private string FormatDescription(Performance s)
-        {
-            string description = s.scene.description;
-            for (int role = 1; role <= s.participants.Length; role++)
-            {
-                string name = s.participants[role - 1].name;
-                description = description.Replace("{" + role + "}", name);
-            }
-            description = description.Replace("}", "");
-            description = description.Replace("{", "");
-
-
-            return description;
-
-        }*/
 
         public static void AddPortraits(Performance stackScene, FlowLayoutPanel parentPanel)
         {
@@ -275,7 +220,14 @@ namespace HungerGamesClient
                 string actorName = participants[i].name;
 
                 PictureBox picture1 = new PictureBox();
-                picture1.Image = Image.FromFile("Images/" + actorName.ToLower() + "_icon.png");
+                try
+                {
+                    picture1.Image = Image.FromFile("Images/" + actorName.ToLower() + "_icon.png");
+                }
+                catch
+                {
+                    picture1.Image = Image.FromFile("Images/default_icon.png");
+                }
                 picture1.Anchor = AnchorStyles.Right & AnchorStyles.Left;
                 picture1.Dock = DockStyle.Fill;
                 picture1.SizeMode = PictureBoxSizeMode.Zoom;
@@ -291,6 +243,7 @@ namespace HungerGamesClient
             if (votingBooth is null)
             {
                 votingBooth = new VotingBooth();
+                votingBooth.Initialize();
             }
             else
             {
@@ -347,9 +300,10 @@ namespace HungerGamesClient
 
         private void editSimButton_Click(object sender, EventArgs e)
         {
+            SyncData();
+            editSimButton.Enabled = false;
             if (editSim is null || editSim.IsDisposed)
             {
-                editSimButton.Enabled = false;
                 Cursor = Cursors.WaitCursor;
                 editSim = new EditSim();
                 editSim.Show();
@@ -357,7 +311,18 @@ namespace HungerGamesClient
             else
             {
                 editSim.Focus();
+                editSimButton.Enabled = true;
             }
+        }
+
+        private void logPanel_ChangeSize(object sender, System.EventArgs e)
+        {
+            ResizeLog();
+        }
+
+        private void ResizeLog()
+        {
+            panel1.Width = logPanel.Width - 50;
         }
     }
 

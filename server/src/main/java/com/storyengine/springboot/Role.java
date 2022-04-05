@@ -30,9 +30,8 @@ public class Role{
         for(Role role : associatedRoles){
           role.auditioner.roles.remove(role);
         }
-      }else{
-        auditioner.roles.remove(this);
       }
+      auditioner.roles.remove(this);
       return 1;
     }
 

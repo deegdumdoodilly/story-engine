@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HungerGamesClient
@@ -17,7 +12,10 @@ namespace HungerGamesClient
         private List<PictureBox> pictureBoxes;
         private List<string> names;
 
-        private Scene scene;
+        public static Scene scene;
+        public static Performance performance;
+
+        private CreateAndResolve createAndResolve;
 
         public RunScene()
         {
@@ -28,6 +26,7 @@ namespace HungerGamesClient
         {
             testButton.Enabled = false;
             executeButton.Enabled = false;
+            resolveButton.Enabled = false;
             scene = SceneEditor.selectedScene;
 
             label1.Text = scene.sceneName;
@@ -60,6 +59,7 @@ namespace HungerGamesClient
 
             testButton.Enabled = false;
             executeButton.Enabled = false;
+            resolveButton.Enabled = false;
             for (int i = 0; i < scene.numParticipants; i++)
             {
                 if (participantDropdowns[i].SelectedIndex == -1)
@@ -72,6 +72,7 @@ namespace HungerGamesClient
             }
             testButton.Enabled = true;
             executeButton.Enabled = true;
+            resolveButton.Enabled = true;
         }
 
         private void participant1_SelectedIndexChanged(object sender, EventArgs e)
@@ -104,22 +105,86 @@ namespace HungerGamesClient
             DropdownChanged(5);
         }
 
-        private void testButton_Click(object sender, EventArgs e)
+        private bool TestScene()
         {
             string cast = "";
             for (int i = 0; i < scene.numParticipants; i++)
                 cast += ((Actor)participantDropdowns[i].SelectedItem).id + ",";
+            cast = cast.Trim(',');
             Performance testPerformance = new Performance(-1, scene, cast.Trim(','), MainForm.actorList);
 
             JsonObject response = JsonObject.PostWithJson("/performances/validate", testPerformance.toJSON());
 
-            if(response.GetString("result").Equals("valid"))
+            return response.GetString("result").Equals("valid");
+        }
+
+        private Performance CreatePerformance()
+        {
+            string cast = "";
+            for (int i = 0; i < scene.numParticipants; i++)
+                cast += ((Actor)participantDropdowns[i].SelectedItem).id + ",";
+            cast = cast.Trim(',');
+            Performance newPerformance = new Performance(-1, scene, cast.Trim(','), MainForm.actorList);
+            return newPerformance;
+        }
+
+        private void testButton_Click(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+            if(TestScene())
             {
-                MessageBox.Show("Test passed! Scene is ready to be executed.");
+                Cursor = Cursors.Default;
+                MessageBox.Show("Test passed! Scene is ready to be executed.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                MessageBox.Show("Test failed for one or more reasons. Make sure the involved characters meet all requirements.");
+                Cursor = Cursors.Default;
+                MessageBox.Show("Test failed for one or more reasons. Make sure the involved characters meet all requirements.", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void executeButton_Click(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+            if (!TestScene())
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show("Performance creation failed for one or more reasons. Make sure the involved characters meet all requirements.", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            Performance newPerformance = CreatePerformance();
+
+            JsonObject response = JsonObject.PostWithJson("/performances/add", newPerformance.toJSON());
+            performance = new Performance(response);
+
+            Cursor = Cursors.Default;
+            MessageBox.Show("Performance created successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // /simulation/execute
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if(createAndResolve != null && !createAndResolve.IsDisposed)
+            {
+                createAndResolve.Focus();
+            }
+            else
+            {
+                Cursor = Cursors.WaitCursor;
+                if (!TestScene())
+                {
+                    Cursor = Cursors.Default;
+                    MessageBox.Show("Performance creation failed for one or more reasons. Make sure the involved characters meet all requirements.", "Failure", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    return;
+                }
+
+                performance = CreatePerformance();
+
+                Cursor = Cursors.Default;
+
+                createAndResolve = new CreateAndResolve();
+                createAndResolve.Show();
             }
         }
     }
